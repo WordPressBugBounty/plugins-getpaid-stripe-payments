@@ -1,0 +1,1129 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GetPaid Stripe Payments 2.3.8\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-11 17:08+0530\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
+"X-Poedit-KeywordsList: __;__ngettext:1,2;__ngettext_noop:1,2;_c;_e;_ex:1,2c;"
+"_n:1,2;_n_noop:1,2;_nc:4c,1,2;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;gettext;"
+"gettext_noop\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Loco-Version: 2.3.1; wp-5.3.2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: getpaid-stripe-payments.php:100
+msgid ""
+"Your version of PHP is below the minimum version of PHP required by "
+"\"GetPaid Stripe Payments\". Please contact your host and request that your "
+"version be upgraded to 5.6.0 or greater."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:68
+msgid "Connect with Stripe"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:69
+msgid "Disconnect from Stripe"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:72
+msgid "Not connected to your live Stripe account."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:75
+msgid "Connected to your live Stripe account."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:80
+msgid "Not connected to your sandbox Stripe account."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:83
+msgid "Connected to your sandbox Stripe account."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:238
+msgid "Redirect to Stripe Checkout"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:239
+msgid "Redirect customers to Stripe checkout."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:239
+msgid "WARNING: This functionality is still in BETA."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:246
+msgid "Disable Stripe Connect"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:247
+msgid "Check to manually enter your API keys"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:254
+msgid "Test Publishable Key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:255
+msgid "Enter your test publishable key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:262
+msgid "Test Secret Key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:263
+msgid "Enter your test secret key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:269
+msgid "Live Publishable Key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:270
+msgid "Enter your live publishable key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:277
+msgid "Live Secret Key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:278
+msgid "Enter your live secret key"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:284
+msgid "Connect to Stripe"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:290
+msgid "Payment Methods"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:291
+msgid ""
+"Select the payment methods you want to enable. Make sure they are enabled in "
+"your Stripe account."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:293
+msgid "ACSS Debit"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:294
+msgid "Affirm"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:295
+msgid "Afterpay Clearpay"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:296
+msgid "Alipay"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:297
+msgid "Australian BECS Debit"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:298
+msgid "Bacs Debit"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:299
+msgid "Bancontact"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:300
+msgid "BLIK"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:301
+msgid "Boleto"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:302
+msgid "Card"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:303
+msgid "Customer Balance"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:304
+msgid "EPS"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:305
+msgid "FPX"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:306
+msgid "Giropay"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:307
+msgid "GrabPay"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:308
+msgid "iDEAL"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:309
+msgid "Klarna"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:310
+msgid "Konbini"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:311
+msgid "Link"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:312
+msgid "OXXO"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:313
+msgid "P24"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:314
+msgid "PayNow"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:315
+msgid "PromptPay"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:316
+msgid "SEPA Debit"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:317
+msgid "SOFORT"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:318
+msgid "US Bank Account"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:319
+msgid "WeChat Pay"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:327
+msgid "Stripe Webhook URL"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:329
+msgid ""
+"Copy and paste this URL into your Stripe account at Developers > Webhooks > "
+"Add endpoint > Endpoint URL. Events to send are invoice.payment_failed, "
+"invoice.payment_succeeded, customer.subscription.created, customer."
+"subscription.deleted, customer.subscription.updated, customer.subscription."
+"trial_will_end, charge.refunded, payment_intent.succeeded, setup_intent."
+"succeeded, setup_intent.setup_failed, setup_intent.requires_action, "
+"setup_intent.created, setup_intent.canceled, checkout.session.completed"
+msgstr ""
+
+#: includes/class-getpaid-stripe-customer.php:232
+#, php-format
+msgid "Created Stripe customer profile: %s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-elements-payment-intent.php:152
+#: includes/class-getpaid-stripe-payment-intent.php:101
+#, php-format
+msgid "Payment for invoice %s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:49
+msgid "Stripe"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:50
+msgid "Stripe Payment"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:115
+msgid "An unknown error occurred. Please try again."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:134
+msgid "Stripe not set-up"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:135
+msgid ""
+"Please ensure that you have setup your Stripe publishable and secret keys in "
+"your WordPress admin dashboard, GetPaid > Settings > Payment Gateways > "
+"Stripe."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:162
+#: includes/update-card-modal.php:38
+msgid "Stripe gateway requires HTTPS connection for live transactions."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:194
+#, php-format
+msgid ""
+"Sorry, the minimum allowed invoice total is %s to use this payment method."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:206
+#, php-format
+msgid ""
+"Sorry, the minimum allowed recurring amount is %s to use this payment method."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:445
+msgid "Payment method update successful."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:625
+msgid "We are sorry. There was an error processing your payment."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:662
+#: includes/class-getpaid-stripe-gateway.php:663
+msgid "You have not set-up your stripe secret key."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:710
+msgid ""
+"( See: <a href=\"https://stripe.com/docs/currencies\" target=\"_blank"
+"\">Supported Currencies</a> )"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:722
+#, php-format
+msgid ""
+"SANDBOX ENABLED. You can use sandbox testing details only. See the "
+"%1$sStripe Sandbox Testing Guide%2$s for more details."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:762
+msgid "Update Payment Card"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:845
+#, php-format
+msgid "An error occured while trying to cancel subscription #%s in Stripe."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:862
+#, php-format
+msgid "Successfully cancelled subscription #%s in Stripe."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:890
+#, php-format
+msgid "An error occured while trying to refund invoice #%1$s in Stripe: %2$s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:899
+#, php-format
+msgid "Successfully refunded invoice #%1$s in Stripe. Refund ID: %2$s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:928
+msgid "Stripe requires HTTPS connection for live transactions."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1028
+msgid "Successfully connected your test Stripe account"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1034
+msgid "Successfully connected your live Stripe account"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1060
+msgid "Successfully disconnected your live Stripe account"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1068
+msgid "Successfully disconnected your test Stripe account"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1096
+msgid "Renewal Payment Failed (Stripe)"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1097
+msgid "These emails are sent to the customer when a renewal payment fails."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1103
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1104
+msgid "Enable this email notification"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1111
+msgid "Enable Admin BCC"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1112
+msgid ""
+"Check if you want to send a copy of this notification email to to the site "
+"admin."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1119
+msgid "Subject"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1120
+msgid "Enter the subject line for this email."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1123
+msgid "[{site_title}] Payment Failed"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1129
+msgid "Email Heading"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1130
+msgid "Enter the main heading contained within the email notification."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1133
+msgid "Payment Failed"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1139
+msgid "Email Content"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1142
+msgid ""
+"<p>Hi {name},</p><p>We are having trouble processing your payment. <a class="
+"\"btn btn-success\" href=\"{subscription_url}\">Update your payment details</"
+"a></p>"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1222
+msgid "Check Expired Subscriptions (Stripe)"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1224
+msgid "Checks if expired subscriptions are actually expired in Stripe."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1237
+#: includes/class-getpaid-stripe-gateway.php:1248
+msgid "Run"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1242
+#: includes/class-getpaid-stripe-gateway.php:1270
+msgid "Process past event (Stripe)"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1244
+msgid "Manually process any Stripe event that occurred in the last 30 days."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1271
+#: includes/update-card-modal.php:18
+msgid "Close"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1288
+msgid "Event ID"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1289
+msgid "For example, evt_3OPLyuIbYxW2G9BD07LRNDds"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1291
+msgid ""
+"Open your Stripe dashboard and then click on Developers > Events. Click on "
+"the event you want to process and copy the ID from the URL. You can also "
+"press Control + i to copy the event id."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1293
+msgid "The event ID must start with evt_."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1311
+#: includes/update-card-modal.php:49
+msgid "Cancel"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1312
+msgid "Process"
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:1356
+msgid "Your subscriptions have been checked."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:248
+msgid "Invoice partically refunded."
+msgstr ""
+
+#: includes/class-getpaid-stripe-payment-intent.php:227
+msgid "Please try again with a different payment method."
+msgstr ""
+
+#: includes/class-getpaid-stripe-payment-method.php:97
+#, php-format
+msgid "Created Stripe payment profile: %s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-resource.php:161
+msgid ""
+"Your card was declined. Please contact your bank for more information or try "
+"again with a different card."
+msgstr ""
+
+#: includes/class-getpaid-stripe-resource.php:161
+#, php-format
+msgid "The decline code is %s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-resource.php:172
+msgid ""
+"An unknown error occured while contacting Stripe. Please verify your details "
+"then try again."
+msgstr ""
+
+#: includes/class-getpaid-stripe-setup-intent.php:114
+msgid "Setup intent not found."
+msgstr ""
+
+#: includes/class-getpaid-stripe-setup-intent.php:139
+msgid "The setup intent has no associated subscription id."
+msgstr ""
+
+#: includes/class-getpaid-stripe-setup-intent.php:144
+msgid "The setup intent has not succeeded."
+msgstr ""
+
+#: includes/class-getpaid-stripe-subscription.php:213
+msgid "Misc"
+msgstr ""
+
+#: includes/class-getpaid-stripe-subscription.php:322
+msgid "Payment Intent creation failed while creating your subscription."
+msgstr ""
+
+#: includes/class-getpaid-stripe-subscription.php:394
+msgid "Payment Intent Failed"
+msgstr ""
+
+#: includes/class-getpaid-stripe-subscription.php:402
+msgid "This invoice will be marked as paid as soon as we confirm your payment."
+msgstr ""
+
+#: includes/class-getpaid-stripe-subscription.php:409
+msgid "Stripe Charge ID: "
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:334
+msgid "Install Required Plugins"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:335
+msgid "Install Plugins"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:337
+#, php-format
+msgid "Installing Plugin: %s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:339
+#, php-format
+msgid "Updating Plugin: %s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:340
+msgid "Something went wrong with the plugin API."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:343
+#, php-format
+msgid "This theme requires the following plugin: %1$s."
+msgid_plural "This theme requires the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:349
+#, php-format
+msgid "This theme recommends the following plugin: %1$s."
+msgid_plural "This theme recommends the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:355
+#, php-format
+msgid ""
+"The following plugin needs to be updated to its latest version to ensure "
+"maximum compatibility with this theme: %1$s."
+msgid_plural ""
+"The following plugins need to be updated to their latest version to ensure "
+"maximum compatibility with this theme: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:361
+#, php-format
+msgid "There is an update available for: %1$s."
+msgid_plural "There are updates available for the following plugins: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:367
+#, php-format
+msgid "The following required plugin is currently inactive: %1$s."
+msgid_plural "The following required plugins are currently inactive: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:373
+#, php-format
+msgid "The following recommended plugin is currently inactive: %1$s."
+msgid_plural "The following recommended plugins are currently inactive: %1$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:378
+msgid "Begin installing plugin"
+msgid_plural "Begin installing plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:383
+msgid "Begin updating plugin"
+msgid_plural "Begin updating plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:388
+msgid "Begin activating plugin"
+msgid_plural "Begin activating plugins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:392
+msgid "Return to Required Plugins Installer"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:393
+#: includes/class-tgm-plugin-activation.php:920
+#: includes/class-tgm-plugin-activation.php:2646
+#: includes/class-tgm-plugin-activation.php:3697
+msgid "Return to the Dashboard"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:394
+#: includes/class-tgm-plugin-activation.php:3272
+msgid "Plugin activated successfully."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:395
+#: includes/class-tgm-plugin-activation.php:3065
+msgid "The following plugin was activated successfully:"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:397
+#, php-format
+msgid "No action taken. Plugin %1$s was already active."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:399
+#, php-format
+msgid ""
+"Plugin not activated. A higher version of %s is needed for this theme. "
+"Please update the plugin."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:401
+#, php-format
+msgid "All plugins installed and activated successfully. %1$s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:402
+msgid "Dismiss this notice"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:403
+msgid ""
+"There are one or more required or recommended plugins to install, update or "
+"activate."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:404
+msgid "Please contact the administrator of this site for help."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:607
+msgid "This plugin needs to be updated to be compatible with your theme."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:608
+msgid "Update Required"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:725
+msgid "Set the parent_slug config variable instead."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:1029
+msgid ""
+"The remote plugin package does not contain a folder with the desired slug "
+"and renaming did not work."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:1029
+#: includes/class-tgm-plugin-activation.php:1039
+msgid ""
+"Please contact the plugin provider and ask them to package their plugin "
+"according to the WordPress guidelines."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:1039
+msgid ""
+"The remote plugin package consists of more than one file, but the files are "
+"not packaged in a folder."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:1228
+#: includes/class-tgm-plugin-activation.php:3061
+msgctxt "plugin A *and* plugin B"
+msgid "and"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2095
+#, php-format
+msgid "TGMPA v%s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2386
+msgid "Required"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2389
+msgid "Recommended"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2405
+msgid "WordPress Repository"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2408
+msgid "External Source"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2411
+msgid "Pre-Packaged"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2428
+msgid "Not Installed"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2432
+msgid "Installed But Not Activated"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2434
+msgid "Active"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2440
+msgid "Required Update not Available"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2443
+msgid "Requires Update"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2446
+msgid "Update recommended"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2455
+#, php-format
+msgctxt "Install/Update Status"
+msgid "%1$s, %2$s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2501
+#, php-format
+msgctxt "plugins"
+msgid "All <span class=\"count\">(%s)</span>"
+msgid_plural "All <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:2505
+#, php-format
+msgid "To Install <span class=\"count\">(%s)</span>"
+msgid_plural "To Install <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:2509
+#, php-format
+msgid "Update Available <span class=\"count\">(%s)</span>"
+msgid_plural "Update Available <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:2513
+#, php-format
+msgid "To Activate <span class=\"count\">(%s)</span>"
+msgid_plural "To Activate <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-tgm-plugin-activation.php:2595
+msgctxt "as in: \"version nr unknown\""
+msgid "unknown"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2603
+msgid "Installed version:"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2611
+msgid "Minimum required version:"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2623
+msgid "Available version:"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2646
+msgid "No plugins to install, update or activate."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2660
+msgid "Plugin"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2661
+msgid "Source"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2662
+msgid "Type"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2666
+msgid "Version"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2667
+msgid "Status"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2716
+#, php-format
+msgid "Install %2$s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2721
+#, php-format
+msgid "Update %2$s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2727
+#, php-format
+msgid "Activate %2$s"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2797
+msgid "Upgrade message from the plugin author:"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2830
+msgid "Install"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2836
+#: includes/update-card-modal.php:50
+msgid "Update"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2839
+msgid "Activate"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2870
+msgid "No plugins were selected to be installed. No action taken."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2872
+msgid "No plugins were selected to be updated. No action taken."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2913
+msgid "No plugins are available to be installed at this time."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:2915
+msgid "No plugins are available to be updated at this time."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3021
+msgid "No plugins were selected to be activated. No action taken."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3047
+msgid "No plugins are available to be activated at this time."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3065
+msgid "The following plugins were activated successfully:"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3271
+msgid "Plugin activation failed."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3615
+#, php-format
+msgid "Updating Plugin %1$s (%2$d/%3$d)"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3618
+#, php-format
+msgid "An error occurred while installing %1$s: <strong>%2$s</strong>."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3620
+#, php-format
+msgid "The installation of %1$s failed."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3624
+msgid ""
+"The installation and activation process is starting. This process may take a "
+"while on some hosts, so please be patient."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3626
+#, php-format
+msgid "%1$s installed and activated successfully."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3626
+#: includes/class-tgm-plugin-activation.php:3634
+msgid "Show Details"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3626
+#: includes/class-tgm-plugin-activation.php:3634
+msgid "Hide Details"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3627
+msgid "All installations and activations have been completed."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3629
+#, php-format
+msgid "Installing and Activating Plugin %1$s (%2$d/%3$d)"
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3632
+msgid ""
+"The installation process is starting. This process may take a while on some "
+"hosts, so please be patient."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3634
+#, php-format
+msgid "%1$s installed successfully."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3635
+msgid "All installations have been completed."
+msgstr ""
+
+#: includes/class-tgm-plugin-activation.php:3637
+#, php-format
+msgid "Installing Plugin %1$s (%2$d/%3$d)"
+msgstr ""
+
+#: includes/stripe-functions.php:50
+msgid "Auto"
+msgstr ""
+
+#: includes/stripe-functions.php:51
+msgid "Arabic"
+msgstr ""
+
+#: includes/stripe-functions.php:52
+msgid "Bulgarian (Bulgaria)"
+msgstr ""
+
+#: includes/stripe-functions.php:53
+msgid "Czech (Czech Republic)"
+msgstr ""
+
+#: includes/stripe-functions.php:54
+msgid "Danish"
+msgstr ""
+
+#: includes/stripe-functions.php:55
+msgid "German (Germany)"
+msgstr ""
+
+#: includes/stripe-functions.php:56
+msgid "Greek (Greece)"
+msgstr ""
+
+#: includes/stripe-functions.php:57
+msgid "English"
+msgstr ""
+
+#: includes/stripe-functions.php:58
+msgid "English (United Kingdom)"
+msgstr ""
+
+#: includes/stripe-functions.php:59
+msgid "Spanish (Spain)"
+msgstr ""
+
+#: includes/stripe-functions.php:60
+msgid "Spanish (Latin America)"
+msgstr ""
+
+#: includes/stripe-functions.php:61
+msgid "Estonian (Estonia)"
+msgstr ""
+
+#: includes/stripe-functions.php:62
+msgid "Finnish (Finland)"
+msgstr ""
+
+#: includes/stripe-functions.php:63
+msgid "French (France)"
+msgstr ""
+
+#: includes/stripe-functions.php:64
+msgid "French (Canada)"
+msgstr ""
+
+#: includes/stripe-functions.php:65
+msgid "Hebrew (Israel)"
+msgstr ""
+
+#: includes/stripe-functions.php:66
+msgid "Hungarian (Hungary)"
+msgstr ""
+
+#: includes/stripe-functions.php:67
+msgid "Indonesian (Indonesia)"
+msgstr ""
+
+#: includes/stripe-functions.php:68
+msgid "Italian (Italy)"
+msgstr ""
+
+#: includes/stripe-functions.php:69
+msgid "Japanese"
+msgstr ""
+
+#: includes/stripe-functions.php:70
+msgid "Lithuanian (Lithuania)"
+msgstr ""
+
+#: includes/stripe-functions.php:71
+msgid "Latvian (Latvia)"
+msgstr ""
+
+#: includes/stripe-functions.php:72
+msgid "Malay (Malaysia)"
+msgstr ""
+
+#: includes/stripe-functions.php:73
+msgid "Maltese (Malta)"
+msgstr ""
+
+#: includes/stripe-functions.php:74
+msgid "Norwegian Bokmål"
+msgstr ""
+
+#: includes/stripe-functions.php:75
+msgid "Dutch (Netherlands)"
+msgstr ""
+
+#: includes/stripe-functions.php:76
+msgid "Polish (Poland)"
+msgstr ""
+
+#: includes/stripe-functions.php:77
+msgid "Portuguese (Brazil)"
+msgstr ""
+
+#: includes/stripe-functions.php:78
+msgid "Portuguese"
+msgstr ""
+
+#: includes/stripe-functions.php:79
+msgid "Romanian (Romania)"
+msgstr ""
+
+#: includes/stripe-functions.php:80
+msgid "Russian (Russia)"
+msgstr ""
+
+#: includes/stripe-functions.php:81
+msgid "Slovak (Slovakia)"
+msgstr ""
+
+#: includes/stripe-functions.php:82
+msgid "Slovenian (Slovenia)"
+msgstr ""
+
+#: includes/stripe-functions.php:83
+msgid "Swedish (Sweden)"
+msgstr ""
+
+#: includes/stripe-functions.php:84
+msgid "Turkish (Turkey)"
+msgstr ""
+
+#: includes/stripe-functions.php:85
+msgid "Chinese Simplified (China)"
+msgstr ""
+
+#: includes/stripe-functions.php:86
+msgid "Chinese Traditional (Hong Kong)"
+msgstr ""
+
+#: includes/stripe-functions.php:87
+msgid "Chinese Simplified (Taiwan)"
+msgstr ""
+
+#: includes/update-card-modal.php:17
+msgid "Update Payment Method"
+msgstr ""
