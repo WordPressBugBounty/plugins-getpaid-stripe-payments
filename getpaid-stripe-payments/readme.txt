@@ -3,8 +3,8 @@ Contributors: stiofansisland, paoltaia, ayecode, picocodes
 Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 4.9
-Tested up to: 6.5
-Stable tag: 2.3.8
+Tested up to: 6.7
+Stable tag: 2.3.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -66,6 +66,10 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.9 - 2024-11-28 =
+* Payment via Stripe > iDEAL don't create subscription at Stripe site - FIXED
+* Don't create invoice entry for cancelled invoice on IPN webhook event - FIXED
 
 = 2.3.8 - 2024-06-11 =
 * Set current_period_end as a subscription expiration - CHANGED
@@ -139,7 +143,7 @@ and you shall get an answer...
 * WordPress 5.8 compatibility check
 
 = 2.2.6 =
-Do not redirect to settings if installed via GetPaid set-up wizzard
+Do not redirect to settings if installed via GetPaid set-up wizard
 
 = 2.2.5 =
 * GetPaid 2.4.0 compatibility - ADDED

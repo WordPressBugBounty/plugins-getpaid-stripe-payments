@@ -365,8 +365,22 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 
 			// Process subscriptions...
 			if ( $invoice->is_recurring() && ! empty( $payment_intent->payment_method ) ) {
-
 				$payment_method = is_object( $payment_intent->payment_method ) ? $payment_intent->payment_method->id : $payment_intent->payment_method;
+
+				// The customer does not have a payment method with the ID pm_xyz. The payment method must be attached to the customer.
+				if ( ! empty( $payment_intent->charges ) && $payment_intent->charges->data ) {
+					$charge = end( $payment_intent->charges->data );
+
+					if ( ! empty( $charge ) && ! empty( $charge->payment_method_details ) ) {
+						$payment_method_details = $charge->payment_method_details;
+
+						if ( ! empty( $payment_method_details->type ) && $payment_method_details->type == 'ideal' ) {
+							if ( ! empty( $payment_method_details->ideal ) && ! empty( $payment_method_details->ideal->generated_sepa_debit ) ) {
+								$payment_method = $payment_method_details->ideal->generated_sepa_debit;
+							}
+						}
+					}
+				}
 
 				// Abort if the invoice has been processed.
 				if ( get_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', true ) === $payment_method ) {
@@ -467,7 +481,6 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		}
 
 		if ( ! $is_checkout_session ) {
-
 			if ( empty( $setup_intent->metadata->invoice_id ) ) {
 				return;
 			}
@@ -480,13 +493,30 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			}
 		}
 
+		$payment_method = is_object( $setup_intent->payment_method ) ? $setup_intent->payment_method->id : $setup_intent->payment_method;
+
+		// The customer does not have a payment method with the ID pm_xyz. The payment method must be attached to the customer.
+		if ( ! empty( $setup_intent->charges ) && $setup_intent->charges->data ) {
+			$charge = end( $setup_intent->charges->data );
+
+			if ( ! empty( $charge ) && ! empty( $charge->payment_method_details ) ) {
+				$payment_method_details = $charge->payment_method_details;
+
+				if ( ! empty( $payment_method_details->type ) && $payment_method_details->type == 'ideal' ) {
+					if ( ! empty( $payment_method_details->ideal ) && ! empty( $payment_method_details->ideal->generated_sepa_debit ) ) {
+						$payment_method = $payment_method_details->ideal->generated_sepa_debit;
+					}
+				}
+			}
+		}
+
 		// Abort if the invoice has been processed.
-		if ( get_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', true ) === $setup_intent->payment_method ) {
+		if ( get_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', true ) === $payment_method ) {
 			return;
 		}
 
 		// Save the payment method to the order.
-		update_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', $setup_intent->payment_method );
+		update_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', $payment_method );
 
 		// Fetch the invoice subscriptions.
 		$subscriptions = function_exists( 'getpaid_get_invoice_subscriptions' ) ? getpaid_get_invoice_subscriptions( $invoice ) : getpaid_get_invoice_subscription( $invoice );

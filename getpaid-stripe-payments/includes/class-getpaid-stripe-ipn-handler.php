@@ -39,12 +39,11 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @return void
 	 */
 	public function process() {
-
 		wpinv_error_log( 'GetPaid Stripe Webhook Handler', false );
 
 		// Retrieve the request's body and parse it as JSON.
-		$body    = @file_get_contents( 'php://input' );
-		$posted  = json_decode( $body );
+		$body   = @file_get_contents( 'php://input' );
+		$posted = json_decode( $body );
 
 		// Validate the IPN.
 		if ( empty( $posted ) ) {
@@ -67,19 +66,21 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			wp_die( wp_kses_post( $event->get_error_message() ), 200 );
 		}
 
-		wpinv_error_log( 'Stripe event_type: ' . $event->type . ' #' . $event->id, false, basename( __FILE__ ), __LINE__ );
+		wpinv_error_log( 'Stripe webhook event start: ' . $event->type . ' #' . $event->id, false, basename( __FILE__ ), __LINE__ );
 
 		$event_type = strtolower( str_replace( '.', '_', $event->type ) );
 
 		if ( method_exists( $this, 'process_' . $event_type ) ) {
-			wpinv_error_log( 'Processing Stripe webhook', false );
+			wpinv_error_log( 'Start processing Stripe webhook: ' . $event->type . ' #' . $event->id, false );
 
 			call_user_func( array( $this, 'process_' . $event_type ), $event->data->object, $event );
+
+			wpinv_error_log( 'Done processing Stripe webhook: ' . $event->type . ' #' . $event->id, false );
 		}
 
 		do_action( "getpaid_stripe_event_{$event_type}", $event );
 
-		wpinv_error_log( 'Done processing Stripe webhook', false );
+		wpinv_error_log( 'Stripe webhook event end: ' . $event->type . ' #' . $event->id, false );
 
 		wp_die( 'Processed', 200 );
 	}
@@ -90,7 +91,6 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @return void
 	 */
 	public function process_manually( $event_id ) {
-
 		if ( empty( $event_id ) ) {
 			wp_die( 'No event id', 200 );
 		}
@@ -132,11 +132,9 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\Invoice $invoice
 	 */
 	protected function process_invoice_payment_failed( $invoice ) {
-
-		wpinv_error_log( 'Processing invoice payment failure webhook', false );
-
 		// Only process if there is a subscription.
 		$subscription_profile = $invoice->subscription;
+
 		if ( empty( $subscription_profile ) ) {
 			return;
 		}
@@ -149,7 +147,6 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		}
 
 		$subscription->failing();
-
 	}
 
 	/**
@@ -158,10 +155,7 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\paymentIntent $payment_intent
 	 */
 	public function process_payment_intent_succeeded( $payment_intent ) {
-
-		wpinv_error_log( 'Processing payment intent succeeded webhook', false );
-
-		// Retreive the invoice.
+		// Retrieve the invoice.
 		$invoice = wpinv_get_invoice( $payment_intent->id );
 
 		if ( empty( $invoice ) ) {
@@ -180,11 +174,9 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\Event $event
 	 */
 	protected function process_invoice_payment_succeeded( $invoice, $event ) {
-
-		wpinv_error_log( 'Processing invoice payment succeeded webhook', false );
-
 		// Only process if there is a subscription.
 		$subscription_profile = $invoice->subscription;
+
 		if ( empty( $subscription_profile ) ) {
 			return;
 		}
@@ -196,15 +188,20 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		// Don't handle payment for cancelled subscription.
+		if ( $subscription->get_status() == 'cancelled' ) {
+			return;
+		}
+
 		// Abort if this is the first payment.
 		$_invoice       = $subscription->get_parent_invoice();
 		$transaction_id = empty( $invoice->charge ) ? $invoice->id : $invoice->charge;
 
 		if ( gmdate( 'Ynd', $subscription->get_time_created() ) === gmdate( 'Ynd', $event->created ) ) {
-
 			$subscription->activate();
 
 			$_invoice->set_transaction_id( $transaction_id );
+
 			if ( ! $_invoice->is_paid() ) {
 				$_invoice->mark_paid();
 			}
@@ -213,9 +210,7 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		}
 
 		$subscription->add_payment( compact( 'transaction_id' ) );
-
-		$subscription->renew();
-
+		$subscription->renew( date( 'Y-m-d H:i:00' ) );
 	}
 
 	/**
@@ -225,9 +220,6 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\Event $event
 	 */
 	protected function process_charge_refunded( $charge, $event ) {
-
-		wpinv_error_log( 'Processing charge refund', false );
-
 		$transaction_id = $charge->id;
 		$invoice        = WPInv_Invoice::get_invoice_id_by_field( $transaction_id, 'transaction_id' );
 		$invoice        = new WPInv_Invoice( $invoice );
@@ -237,20 +229,16 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		}
 
 		$refunded_amount = ! empty( $charge->amount_refunded ) ? $charge->amount_refunded : 0;
-		$payment_amount  = $invoice->get_total();
-		/*if ( ! wpinv_stripe_is_zero_decimal_currency( $invoice->get_currency() ) ) {
-			$payment_amount = $payment_amount * 100;
-		}*/
+		$payment_amount = $invoice->get_total();
 		$payment_amount = getpaid_stripe_get_amount( $payment_amount, $invoice->get_currency() );
 
 		// This is a partial refund;
 		if ( floatval( $refunded_amount ) < floatval( $payment_amount ) ) {
-			$invoice->add_note( __( 'Invoice partically refunded.', 'wpinv-stripe' ), false, false, true );
+			$invoice->add_note( __( 'Invoice partially refunded.', 'wpinv-stripe' ), false, false, true );
 			return;
 		}
 
 		$invoice->refund();
-
 	}
 
 	/**
@@ -263,6 +251,7 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		wpinv_error_log( 'Processing subscription update for #' . $stripe_subscription->id, false );
 
 		$subscription_id = WPInv_Subscription::get_subscription_id_by_field( $stripe_subscription->id );
+
 		if ( empty( $subscription_id ) ) {
 			wpinv_error_log( 'No subscription found for #' . $stripe_subscription->id, false );
 			return;
@@ -271,6 +260,11 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		$subscription = new WPInv_Subscription( $subscription_id );
 
 		if ( ! $subscription->exists() ) {
+			return;
+		}
+
+		// Don't handle webhook for cancelled subscription.
+		if ( $subscription->get_status() == 'cancelled' ) {
 			return;
 		}
 
@@ -311,6 +305,11 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		// Don't handle webhook for cancelled subscription.
+		if ( $subscription->get_status() == 'cancelled' ) {
+			return;
+		}
+
 		wpinv_error_log( 'Processing subscription cancellation for #' . $stripe_subscription->id, false );
 
 		$subscription->cancel();
@@ -345,12 +344,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\setupIntent $setup_intent
 	 */
 	protected function process_setup_intent_succeeded( $setup_intent ) {
-
-		wpinv_error_log( 'Processing subscription setup intent', false );
-
 		// If there is a remote_id metadata field, then we're updating a payment method.
 		if ( ! empty( $setup_intent->metadata->remote_id ) ) {
-
 			// Fetch local sub.
 			$subscription = WPInv_Subscription::get_subscription_id_by_field( $setup_intent->metadata->remote_id );
 			$subscription = new WPInv_Subscription( $subscription );
@@ -359,8 +354,9 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 				return;
 			}
 
-			// Preocess the payment method.
+			// Process the payment method.
 			$_setup_intent = new GetPaid_Stripe_Setup_Intent( $this, $subscription );
+
 			return $_setup_intent->process_payment_method( $setup_intent );
 		}
 
@@ -372,17 +368,34 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		// Retrieve the matching invoice.
 		$invoice = wpinv_get_invoice( $setup_intent->metadata->invoice_key );
 
-		if ( empty( $invoice ) || ! $invoice->exists() ) {
+		if ( ! ( ! empty( $invoice ) && $invoice->exists() ) ) {
 			return;
 		}
 
+		$payment_method = is_object( $setup_intent->payment_method ) ? $setup_intent->payment_method->id : $setup_intent->payment_method;
+
+		// The customer does not have a payment method with the ID pm_xyz. The payment method must be attached to the customer.
+		if ( ! empty( $setup_intent->charges ) && $setup_intent->charges->data ) {
+			$charge = end( $setup_intent->charges->data );
+
+			if ( ! empty( $charge ) && ! empty( $charge->payment_method_details ) ) {
+				$payment_method_details = $charge->payment_method_details;
+
+				if ( ! empty( $payment_method_details->type ) && $payment_method_details->type == 'ideal' ) {
+					if ( ! empty( $payment_method_details->ideal ) && ! empty( $payment_method_details->ideal->generated_sepa_debit ) ) {
+						$payment_method = $payment_method_details->ideal->generated_sepa_debit;
+					}
+				}
+			}
+		}
+
 		// Abort if the invoice has been processed.
-		if ( get_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', true ) === $setup_intent->payment_method ) {
+		if ( get_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', true ) === $payment_method ) {
 			return;
 		}
 
 		// Save the payment method to the order.
-		update_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', $setup_intent->payment_method );
+		update_post_meta( $invoice->get_id(), 'getpaid_stripe_payment_profile_id', $payment_method );
 
 		// Fetch the invoice subscriptions.
 		$subscriptions = function_exists( 'getpaid_get_invoice_subscriptions' ) ? getpaid_get_invoice_subscriptions( $invoice ) : getpaid_get_invoice_subscription( $invoice );
@@ -395,7 +408,6 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 				getpaid()->gateways['stripe']->process_normal_subscription( $subscriptions );
 			}
 		}
-
 	}
 
 	/**
@@ -404,9 +416,6 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\Checkout\Session $session
 	 */
 	protected function process_checkout_session_completed( $session ) {
-
-		wpinv_error_log( 'Processing checkout session complete', false );
-
 		// Retrieve the matching invoice.
 		$invoice = wpinv_get_invoice( $session->client_reference_id );
 
@@ -427,10 +436,14 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 
 		// Process subscriptions.
 		if ( 'subscription' === $session->mode ) {
-
 			$subscription = getpaid_get_invoice_subscriptions( $invoice );
 
 			if ( is_object( $subscription ) ) {
+				// Don't handle payment for cancelled subscription.
+				if ( $subscription->get_status() == 'cancelled' ) {
+					return;
+				}
+
 				if ( ! empty( $session->subscription ) ) {
 					$subscription->set_profile_id( $session->subscription );
 				}
@@ -445,6 +458,5 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			$invoice->set_remote_subscription_id( $session->subscription );
 			$invoice->mark_paid();
 		}
-
 	}
 }
