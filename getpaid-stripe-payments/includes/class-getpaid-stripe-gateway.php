@@ -227,6 +227,8 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			wpinv_send_back_to_checkout( $invoice );
 		}
 
+		$invoice->add_note( wp_sprintf( __( 'Stripe Payment Intent ID: %s', 'wpinv-stripe' ), wpinv_clean( $remote_intent->id ) ), false, false, true );
+
 		$invoice->set_transaction_id( $remote_intent->id );
 		$invoice->save();
 
@@ -356,8 +358,12 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		if ( 'succeeded' === $payment_intent->status ) {
 
 			if ( ! empty( $payment_intent->latest_charge ) ) {
+				$invoice->add_note( wp_sprintf( __( 'Stripe Charge ID: %s', 'wpinv-stripe' ), wpinv_clean( $payment_intent->latest_charge ) ), false, false, true );
+
 				$invoice->set_transaction_id( $payment_intent->latest_charge );
 			} else {
+				$invoice->add_note( wp_sprintf( __( 'Stripe Payment Intent ID: %s', 'wpinv-stripe' ), wpinv_clean( $payment_intent->id ) ), false, false, true );
+
 				$invoice->set_transaction_id( $payment_intent->id );
 			}
 
@@ -1450,6 +1456,11 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 
 			/** @var \Stripe\PaymentIntent|WP_error $remote_intent */
 			$remote_intent = $payment_intent->update();
+
+			// Save intent id to prevent generating unwanted intents.
+			if ( ! is_wp_error( $remote_intent ) && ! empty( $remote_intent->id ) && ! empty( $payment_intent->invoice ) && $payment_intent->invoice->exists() && ! get_post_meta( (int) $payment_intent->invoice->get_id(), '_gp_stripe_intent_id', true ) ) {
+				update_post_meta( (int) $payment_intent->invoice->get_id(), '_gp_stripe_intent_id', $remote_intent->id );
+			}
 		} catch ( Exception $e ) {
 			$remote_intent = new WP_Error( 'stripe_error', $e->getMessage() );
 		}

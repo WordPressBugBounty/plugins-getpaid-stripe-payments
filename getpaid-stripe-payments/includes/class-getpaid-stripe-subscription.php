@@ -306,8 +306,12 @@ class GetPaid_Stripe_Subscription extends GetPaid_Stripe_Resource {
 				$invoice->set_remote_subscription_id( $subscription->id );
 
 				if ( ! $is_initial_payment_taken && ! empty( $subscription->latest_invoice->charge ) ) {
+					$invoice->add_note( wp_sprintf( __( 'Stripe Charge ID: %s', 'wpinv-stripe' ), wpinv_clean( $subscription->latest_invoice->charge ) ), false, false, true );
+
 					$invoice->set_transaction_id( $subscription->latest_invoice->charge );
 				}
+
+				$invoice->add_note( wp_sprintf( __( 'Stripe Subscription ID: %s', 'wpinv-stripe' ), wpinv_clean( $subscription->id ) ), false, false, true );
 
 				if ( ! $is_initial_payment_taken ) {
 					$invoice->mark_paid();

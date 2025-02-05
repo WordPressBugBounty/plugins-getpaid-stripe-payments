@@ -42,7 +42,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		wpinv_error_log( 'GetPaid Stripe Webhook Handler', false );
 
 		// Retrieve the request's body and parse it as JSON.
-		$body   = @file_get_contents( 'php://input' );
+		//$body    = @file_get_contents( 'php://input' );
+		$body    = file_get_contents( WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'stripe-ipn.log' );
 		$posted = json_decode( $body );
 
 		// Validate the IPN.
@@ -199,6 +200,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 
 		if ( gmdate( 'Ynd', $subscription->get_time_created() ) === gmdate( 'Ynd', $event->created ) ) {
 			$subscription->activate();
+
+			$_invoice->add_note( wp_sprintf( __( 'Stripe Charge ID: %s', 'wpinv-stripe' ), wpinv_clean( $transaction_id ) ), false, false, true );
 
 			$_invoice->set_transaction_id( $transaction_id );
 
@@ -452,6 +455,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			}
 
 			if ( ! empty( $session->invoice ) ) {
+				$invoice->add_note( wp_sprintf( __( 'Stripe Invoice ID: %s', 'wpinv-stripe' ), wpinv_clean( $session->invoice ) ), false, false, true );
+
 				$invoice->set_transaction_id( $session->invoice );
 			}
 
