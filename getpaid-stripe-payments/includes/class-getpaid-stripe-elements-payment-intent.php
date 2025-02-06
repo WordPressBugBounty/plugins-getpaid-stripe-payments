@@ -64,7 +64,7 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 		}
 
 		// Intent id from saved post meta.
-		if ( empty( $intent_id ) ) {
+		if ( empty( $intent_id ) && ! empty( $this->invoice ) && $this->invoice->exists() ) {
 			$intent_id = get_post_meta( (int) $this->invoice->get_id(), '_gp_stripe_intent_id', true );
 		}
 
