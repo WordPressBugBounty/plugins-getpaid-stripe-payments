@@ -4,7 +4,7 @@ Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 4.9
 Tested up to: 6.7
-Stable tag: 2.3.11
+Stable tag: 2.3.12
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -66,6 +66,9 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.12 - 2025-02-10 =
+* Prevent PHP notice during webhook request execution - FIXED
 
 = 2.3.11 - 2025-02-06 =
 * Issue during  creating intents when invoice is empty - FIXED

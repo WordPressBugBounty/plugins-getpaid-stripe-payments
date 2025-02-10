@@ -42,9 +42,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		wpinv_error_log( 'GetPaid Stripe Webhook Handler', false );
 
 		// Retrieve the request's body and parse it as JSON.
-		//$body    = @file_get_contents( 'php://input' );
-		$body    = file_get_contents( WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'stripe-ipn.log' );
-		$posted = json_decode( $body );
+		$body = @file_get_contents( 'php://input' );
+		$posted = ! empty( $body ) ? json_decode( $body ) : array();
 
 		// Validate the IPN.
 		if ( empty( $posted ) ) {

@@ -1,9 +1,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GetPaid Stripe Payments 2.3.11\n"
+"Project-Id-Version: GetPaid Stripe Payments 2.3.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 20:20+0530\n"
+"POT-Creation-Date: 2025-02-10 12:19+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
@@ -299,7 +299,7 @@ msgid "Stripe Payment Intent ID: %s"
 msgstr ""
 
 #: includes/class-getpaid-stripe-gateway.php:361
-#: includes/class-getpaid-stripe-ipn-handler.php:204
+#: includes/class-getpaid-stripe-ipn-handler.php:203
 #: includes/class-getpaid-stripe-subscription.php:309
 #, php-format
 msgid "Stripe Charge ID: %s"
@@ -495,11 +495,11 @@ msgstr ""
 msgid "Your subscriptions have been checked."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:240
+#: includes/class-getpaid-stripe-ipn-handler.php:239
 msgid "Invoice partially refunded."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:458
+#: includes/class-getpaid-stripe-ipn-handler.php:457
 #, php-format
 msgid "Stripe Invoice ID: %s"
 msgstr ""
