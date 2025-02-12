@@ -211,8 +211,15 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		// Period start date.
+		$period_start = strtotime( date( 'Y-m-d H:i:00' ) );
+
+		if ( ! empty( $invoice->status_transitions ) && ! empty( $invoice->status_transitions->paid_at ) ) {
+			$period_start = (int) $invoice->status_transitions->paid_at;
+		}
+
 		$subscription->add_payment( compact( 'transaction_id' ) );
-		$subscription->renew( date( 'Y-m-d H:i:00' ) );
+		$subscription->renew( $period_start );
 	}
 
 	/**

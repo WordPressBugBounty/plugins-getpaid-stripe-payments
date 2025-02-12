@@ -12,7 +12,7 @@
  * Plugin Name:       GetPaid Stripe Payments
  * Plugin URI:        https://wpgetpaid.com/downloads/stripe-payment-gateway/
  * Description:       Stripe payment gateway for Invoicing/GetPaid plugin.
- * Version:           2.3.12
+ * Version:           2.3.13
  * Author:            AyeCode Ltd
  * Author URI:        https://wpgetpaid.com/
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 if ( ! defined( 'WPINV_STRIPE_VERSION' ) ) {
-    define( 'WPINV_STRIPE_VERSION', '2.3.12' );
+    define( 'WPINV_STRIPE_VERSION', '2.3.13' );
 }
 
 if ( ! defined( 'WPINV_STRIPE_FILE' ) ) {
