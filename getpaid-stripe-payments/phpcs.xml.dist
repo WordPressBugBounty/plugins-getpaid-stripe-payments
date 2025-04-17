@@ -14,7 +14,6 @@
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/index.php</exclude-pattern>
-	<exclude-pattern>*/includes/class-tgm-plugin-activation.php</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 
 	<rule ref="Internal.NoCodeFound">
@@ -49,7 +48,7 @@
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="wpinv-stripe,tgmpa" />
+			<property name="text_domain" type="array" value="wpinv-stripe" />
 		</properties>
 	</rule>
 

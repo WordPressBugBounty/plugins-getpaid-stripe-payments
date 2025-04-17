@@ -79,6 +79,15 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	}
 
 	/**
+	* Checks if we should load Stripe.js globally.
+	*
+	*/
+	public function load_stripe_js_globally() {
+		$load = (bool) wpinv_get_option( 'load_stripe_js_globally', true );
+		return apply_filters( 'wpinv_load_stripe_js_globally', $load );
+	}
+
+	/**
 	* Checks if we should redirect to stripe checkout.
 	*
 	*/
@@ -96,6 +105,11 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		$key = $this->is_sandbox() ? wpinv_get_option( 'stripe_test_publishable_key' ) : wpinv_get_option( 'stripe_live_publishable_key' );
 
 		if ( empty( $key ) || $this->redirect_to_stripe() ) {
+			return;
+		}
+
+		// Load Stripe.js globally or only on checkout pages.
+		if ( ! wpinv_is_checkout() && ! $this->load_stripe_js_globally() ) {
 			return;
 		}
 

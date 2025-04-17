@@ -2,9 +2,9 @@
 Contributors: stiofansisland, paoltaia, ayecode, picocodes
 Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
-Requires at least: 4.9
-Tested up to: 6.7
-Stable tag: 2.3.13
+Requires at least: 5.0
+Tested up to: 6.8
+Stable tag: 2.3.14
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -66,6 +66,10 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.14 - 2025-04-17 =
+* Added option to load Stripe.js globally or only on checkout pages - ADDED
+* Removed TGM plugin activation class - CHANGED
 
 = 2.3.13 - 2025-02-12 =
 * Fix PHP 8 compatibility issue during renewal payment webhook - FIXED

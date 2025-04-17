@@ -229,8 +229,15 @@ class GetPaid_Stripe_Admin {
 	 * @return array
 	 */
 	public static function get_settings() {
-
+		
 		return array(
+			'load_stripe_js_globally' => array(
+				'type' => 'checkbox',
+				'id'   => 'load_stripe_js_globally',
+				'name' => __( 'Load Stripe.js globally', 'wpinv-stripe' ),
+				'desc' => __( 'Load Stripe.js on all pages of your site. This is the recommended approach by Stripe.', 'wpinv-stripe' ),
+				'std'  => true,
+			),
 
 			'redirect_stripe_checkout'    => array(
 				'type' => 'checkbox',
