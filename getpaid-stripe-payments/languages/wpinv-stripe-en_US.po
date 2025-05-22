@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: GetPaid Stripe Payments 2.3.14\n"
+"Project-Id-Version: GetPaid Stripe Payments 2.3.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-17 17:54+0530\n"
-"PO-Revision-Date: 2025-04-17 17:54+0530\n"
+"POT-Creation-Date: 2025-05-22 19:05+0530\n"
+"PO-Revision-Date: 2025-05-22 19:05+0530\n"
 "Last-Translator: AyeCode Ltd <contact@ayecode.io>\n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
 "Language: en_US\n"
@@ -250,6 +250,16 @@ msgid ""
 "trial_will_end, charge.refunded, payment_intent.succeeded, setup_intent."
 "succeeded, setup_intent.setup_failed, setup_intent.requires_action, "
 "setup_intent.created, setup_intent.canceled, checkout.session.completed"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:345
+msgid "Disable Update Card Details"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:346
+msgid ""
+"Tick to prevent customers from updating their payment card details on the "
+"frontend view subscription page for active subscriptions."
 msgstr ""
 
 #: includes/class-getpaid-stripe-customer.php:232

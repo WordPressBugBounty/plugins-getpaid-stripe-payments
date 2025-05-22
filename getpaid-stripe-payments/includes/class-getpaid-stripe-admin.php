@@ -339,6 +339,13 @@ class GetPaid_Stripe_Admin {
 				'faux'   => true,
 			),
 
+			'stripe_disable_update_card' => array(
+				'type' => 'checkbox',
+				'id'   => 'stripe_disable_update_card',
+				'name' => __( 'Disable Update Card Details', 'wpinv-stripe' ),
+				'desc' => __( 'Tick to prevent customers from updating their payment card details on the frontend view subscription page for active subscriptions.', 'wpinv-stripe' ),
+				'std'  => true
+			)
 		);
 
 	}
