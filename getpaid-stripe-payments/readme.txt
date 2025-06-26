@@ -4,7 +4,7 @@ Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.3.15
+Stable tag: 2.3.16
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -12,7 +12,7 @@ Stripe Payments for WordPress made easy. Accept credit cards on your WordPress s
 
 == Description of the Stripe Payments plugin for GetPaid ==
 
-Accepting Credit Cards on your website is easier than ever with the GetPaid plugin and its Stripe Payment Gateway. You can trust us, we are [Stripe Verified Partner](https://stripe.com/partners/wp-invoicing)!
+Accepting Credit Cards on your website is easier than ever with the GetPaid plugin and its Stripe Payment Gateway. You can trust us, we are [Stripe Verified Partner](https://stripe.partners/directory/getpaid)!
 
 = Why Stripe =
 
@@ -66,6 +66,9 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.16 - 2025-06-26 =
+* Cancel and close buttons on "Update Payment Card" modal now work as expected - FIXED
 
 = 2.3.15 - 2025-05-22 =
 * Option added to enable/disable allowing customers update payment card details - ADDED

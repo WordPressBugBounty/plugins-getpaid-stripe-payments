@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 				<div class="modal-header">
         			<h5 class="modal-title"><?php esc_html_e( 'Update Payment Method', 'wpinv-stripe' ); ?></h5>
-					<button type="button" class="close btn-close" data-dismiss="modal" aria-label="<?php esc_attr_e( 'Close', 'wpinv-stripe' ); ?>">
+					<button type="button" class="close btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="<?php esc_attr_e( 'Close', 'wpinv-stripe' ); ?>">
 						<?php if ( empty( $GLOBALS['aui_bs5'] ) ) : ?>
                             <span aria-hidden="true">×</span>
                         <?php endif; ?>
@@ -46,7 +46,7 @@ defined( 'ABSPATH' ) || exit;
                 </div>
 
 				<div class="modal-footer">
-        			<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php esc_html_e( 'Cancel', 'wpinv-stripe' ); ?></button>
+        			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal"><?php esc_html_e( 'Cancel', 'wpinv-stripe' ); ?></button>
         			<button type="button" class="btn btn-primary getpaid-process-updated-stripe-payment-method"><?php esc_html_e( 'Update', 'wpinv-stripe' ); ?></button>
       			</div>
 
