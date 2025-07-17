@@ -4,7 +4,7 @@ Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 2.3.16
+Stable tag: 2.3.17
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -66,6 +66,9 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.17 - 2025-07-17 =
+* Concurrent request execution sends invoice mail twice - FIXED
 
 = 2.3.16 - 2025-06-26 =
 * Cancel and close buttons on "Update Payment Card" modal now work as expected - FIXED

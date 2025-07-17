@@ -286,13 +286,15 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 *
 	 */
 	public function maybe_process_payment_intent() {
-
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['payment_intent'] ) && isset( $_GET['invoice_key'] ) && wpinv_is_success_page() ) {
 			$invoice = wpinv_get_invoice( wpinv_get_invoice_id_by_key( $_GET['invoice_key'] ) );
 
 			try {
+				update_post_meta( $invoice->get_id(), '_gp_stripe_process_intent', 1 );
+
 				$this->process_payment_intent( $_GET['payment_intent'], $invoice );
+
 				wp_safe_redirect( remove_query_arg( array( 'payment_intent', 'payment_intent_client_secret', 'redirect_status' ) ) );
 				exit;
 			} catch ( Exception $e ) {
@@ -309,15 +311,11 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 * @param WPInv_Invoice $invoice Invoice.
 	 */
 	public function process_payment_intent( $payment_intent_id, $invoice = null, $is_checkout_session = false ) {
-
 		// The payment intent object.
 		if ( is_object( $payment_intent_id ) ) {
-
 			/** @var \Stripe\PaymentIntent $payment_intent */
 			$payment_intent = $payment_intent_id;
-
-		} elseif ( $is_checkout_session ) {
-
+		} else if ( $is_checkout_session ) {
 			$_payment_intent          = new GetPaid_Stripe_Payment_Intent( $this, $invoice );
 			$_payment_intent->invoice = $invoice;
 
@@ -332,27 +330,35 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		}
 
 		// Abort if an error occurred.
-		if ( is_wp_error( $payment_intent ) ) {
+		if ( is_wp_error( $payment_intent ) || empty( $payment_intent ) ) {
 			return;
 		}
 
 		// Retrieve the matching invoice.
 		if ( ! $is_checkout_session ) {
-
 			if ( empty( $payment_intent->metadata->invoice_id ) ) {
 				return;
 			}
 
 			$invoice = wpinv_get_invoice( $payment_intent->metadata->invoice_id );
-
 		}
 
 		if ( empty( $invoice ) || ! $invoice->exists() || $invoice->has_status( 'publish' ) ) {
 			return;
 		}
 
+		$invoice_id = (int) $invoice->get_id();
+
+		if ( ( $_intent_status = get_post_meta( $invoice_id, '_gp_stripe_intent_status', true ) ) && ( $_intent_id = get_post_meta( $invoice_id, 'wpinv_stripe_intent_id', true ) ) ) {
+			if ( $_intent_id == $payment_intent->id && $_intent_status == $payment_intent->status ) {
+				// Payment intent status already processed.
+				return;
+			}
+		}
+
 		// Save it to the invoice.
-		update_post_meta( $invoice->get_id(), 'wpinv_stripe_intent_id', $payment_intent->id );
+		update_post_meta( $invoice_id, 'wpinv_stripe_intent_id', $payment_intent->id );
+		update_post_meta( $invoice_id, '_gp_stripe_intent_status', $payment_intent->status );
 
 		// Process the payment intent.
 

@@ -162,6 +162,12 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		// Prevent concurrent requests executing payment intent twice.
+		if ( get_post_meta( $invoice->get_id(), '_gp_stripe_process_intent', true ) ) {
+			delete_post_meta( $invoice->get_id(), '_gp_stripe_process_intent' );
+			sleep(2);
+		}
+
 		wpinv_error_log( 'Found invoice #' . $invoice->get_number(), false );
 
 		getpaid()->gateways['stripe']->process_payment_intent( $payment_intent, $invoice );
