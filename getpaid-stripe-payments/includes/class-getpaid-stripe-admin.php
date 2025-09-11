@@ -333,9 +333,10 @@ class GetPaid_Stripe_Admin {
 				'id'     => 'stripe_ipn_url',
 				'name'   => __( 'Stripe Webhook URL', 'wpinv-stripe' ),
 				'std'    => wpinv_get_ipn_url( 'stripe' ),
-				'desc'   => __( 'Copy and paste this URL into your Stripe account at Developers > Webhooks > Add endpoint > Endpoint URL. Events to send are invoice.payment_failed, invoice.payment_succeeded, customer.subscription.created, customer.subscription.deleted, customer.subscription.updated, customer.subscription.trial_will_end, charge.refunded, payment_intent.succeeded, setup_intent.succeeded, setup_intent.setup_failed, setup_intent.requires_action, setup_intent.created, setup_intent.canceled, checkout.session.completed', 'wpinv-stripe' ),
+				'desc' => wp_sprintf( __( 'Copy this URL and save it in <strong>Webhook Endpoint Url</strong> at <strong>Stripe Dashboard > Developers > Webhooks</strong>. Check full documentation for %s<strong>Stripe Webhook Setup</strong>%s.', 'wpinv-stripe' ), '<a href="https://wpgetpaid.com/documentation/article/payment-gateways/stripe-webhook-setup/" target="_blank" rel="noreferrer noopener">', '</a>' ) . '<br>' . __( 'Events to send are charge.refunded, checkout.session.completed, customer.subscription.created, customer.subscription.deleted, customer.subscription.trial_will_end, customer.subscription.updated, invoice.payment_failed, invoice.payment_succeeded, payment_intent.succeeded, setup_intent.canceled, setup_intent.created, setup_intent.requires_action, setup_intent.setup_failed, setup_intent.succeeded.', 'wpinv-stripe' ),
 				'size'   => 'large',
 				'custom' => 'stripe',
+				'style' => 'width:inherit;',
 				'faux'   => true,
 			),
 

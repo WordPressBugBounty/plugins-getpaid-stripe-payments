@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: GetPaid Stripe Payments 2.3.17\n"
+"Project-Id-Version: GetPaid Stripe Payments 2.3.18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 20:00+0530\n"
-"PO-Revision-Date: 2025-07-17 20:00+0530\n"
+"POT-Creation-Date: 2025-09-11 20:02+0530\n"
+"PO-Revision-Date: 2025-09-11 20:02+0530\n"
 "Last-Translator: AyeCode Ltd <contact@ayecode.io>\n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
 "Language: en_US\n"
@@ -242,21 +242,28 @@ msgid "Stripe Webhook URL"
 msgstr ""
 
 #: includes/class-getpaid-stripe-admin.php:336
+#, php-format
 msgid ""
-"Copy and paste this URL into your Stripe account at Developers > Webhooks > "
-"Add endpoint > Endpoint URL. Events to send are invoice.payment_failed, "
-"invoice.payment_succeeded, customer.subscription.created, customer."
-"subscription.deleted, customer.subscription.updated, customer.subscription."
-"trial_will_end, charge.refunded, payment_intent.succeeded, setup_intent."
-"succeeded, setup_intent.setup_failed, setup_intent.requires_action, "
-"setup_intent.created, setup_intent.canceled, checkout.session.completed"
+"Copy this URL and save it in <strong>Webhook Endpoint Url</strong> at "
+"<strong>Stripe Dashboard > Developers > Webhooks</strong>. Check full "
+"documentation for %s<strong>Stripe Webhook Setup</strong>%s."
 msgstr ""
 
-#: includes/class-getpaid-stripe-admin.php:345
-msgid "Disable Update Card Details"
+#: includes/class-getpaid-stripe-admin.php:336
+msgid ""
+"Events to send are charge.refunded, checkout.session.completed, customer."
+"subscription.created, customer.subscription.deleted, customer.subscription."
+"trial_will_end, customer.subscription.updated, invoice.payment_failed, "
+"invoice.payment_succeeded, payment_intent.succeeded, setup_intent.canceled, "
+"setup_intent.created, setup_intent.requires_action, setup_intent."
+"setup_failed, setup_intent.succeeded."
 msgstr ""
 
 #: includes/class-getpaid-stripe-admin.php:346
+msgid "Disable Update Card Details"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:347
 msgid ""
 "Tick to prevent customers from updating their payment card details on the "
 "frontend view subscription page for active subscriptions."
