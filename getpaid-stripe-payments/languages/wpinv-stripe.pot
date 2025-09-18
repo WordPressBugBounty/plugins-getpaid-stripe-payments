@@ -1,9 +1,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GetPaid Stripe Payments 2.3.18\n"
+"Project-Id-Version: GetPaid Stripe Payments 2.3.19\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 20:02+0530\n"
+"POT-Creation-Date: 2025-09-18 20:14+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
@@ -320,205 +320,205 @@ msgid ""
 msgstr ""
 
 #: includes/class-getpaid-stripe-gateway.php:244
-#: includes/class-getpaid-stripe-gateway.php:385
+#: includes/class-getpaid-stripe-gateway.php:394
 #, php-format
 msgid "Stripe Payment Intent ID: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:381
+#: includes/class-getpaid-stripe-gateway.php:390
 #: includes/class-getpaid-stripe-ipn-handler.php:209
 #: includes/class-getpaid-stripe-subscription.php:309
 #, php-format
 msgid "Stripe Charge ID: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:485
+#: includes/class-getpaid-stripe-gateway.php:494
 msgid "Payment method update successful."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:681
+#: includes/class-getpaid-stripe-gateway.php:690
 msgid "We are sorry. There was an error processing your payment."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:718
-#: includes/class-getpaid-stripe-gateway.php:719
+#: includes/class-getpaid-stripe-gateway.php:727
+#: includes/class-getpaid-stripe-gateway.php:728
 msgid "You have not set-up your stripe secret key."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:766
+#: includes/class-getpaid-stripe-gateway.php:775
 msgid ""
 "( See: <a href=\"https://stripe.com/docs/currencies\" "
 "target=\"_blank\">Supported Currencies</a> )"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:778
+#: includes/class-getpaid-stripe-gateway.php:787
 #, php-format
 msgid ""
 "SANDBOX ENABLED. You can use sandbox testing details only. See the "
 "%1$sStripe Sandbox Testing Guide%2$s for more details."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:818
+#: includes/class-getpaid-stripe-gateway.php:827
 msgid "Update Payment Card"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:901
+#: includes/class-getpaid-stripe-gateway.php:910
 #, php-format
 msgid "An error occured while trying to cancel subscription #%s in Stripe."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:918
+#: includes/class-getpaid-stripe-gateway.php:927
 #, php-format
 msgid "Successfully cancelled subscription #%s in Stripe."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:946
+#: includes/class-getpaid-stripe-gateway.php:955
 #, php-format
 msgid "An error occured while trying to refund invoice #%1$s in Stripe: %2$s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:955
+#: includes/class-getpaid-stripe-gateway.php:964
 #, php-format
 msgid "Successfully refunded invoice #%1$s in Stripe. Refund ID: %2$s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:984
+#: includes/class-getpaid-stripe-gateway.php:993
 msgid "Stripe requires HTTPS connection for live transactions."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1084
+#: includes/class-getpaid-stripe-gateway.php:1093
 msgid "Successfully connected your test Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1090
+#: includes/class-getpaid-stripe-gateway.php:1099
 msgid "Successfully connected your live Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1116
+#: includes/class-getpaid-stripe-gateway.php:1125
 msgid "Successfully disconnected your live Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1124
+#: includes/class-getpaid-stripe-gateway.php:1133
 msgid "Successfully disconnected your test Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1152
+#: includes/class-getpaid-stripe-gateway.php:1161
 msgid "Renewal Payment Failed (Stripe)"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1153
+#: includes/class-getpaid-stripe-gateway.php:1162
 msgid "These emails are sent to the customer when a renewal payment fails."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1159
+#: includes/class-getpaid-stripe-gateway.php:1168
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1160
+#: includes/class-getpaid-stripe-gateway.php:1169
 msgid "Enable this email notification"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1167
+#: includes/class-getpaid-stripe-gateway.php:1176
 msgid "Enable Admin BCC"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1168
+#: includes/class-getpaid-stripe-gateway.php:1177
 msgid ""
 "Check if you want to send a copy of this notification email to to the site "
 "admin."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1175
+#: includes/class-getpaid-stripe-gateway.php:1184
 msgid "Subject"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1176
+#: includes/class-getpaid-stripe-gateway.php:1185
 msgid "Enter the subject line for this email."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1179
+#: includes/class-getpaid-stripe-gateway.php:1188
 msgid "[{site_title}] Payment Failed"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1185
+#: includes/class-getpaid-stripe-gateway.php:1194
 msgid "Email Heading"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1186
+#: includes/class-getpaid-stripe-gateway.php:1195
 msgid "Enter the main heading contained within the email notification."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1189
+#: includes/class-getpaid-stripe-gateway.php:1198
 msgid "Payment Failed"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1195
+#: includes/class-getpaid-stripe-gateway.php:1204
 msgid "Email Content"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1198
+#: includes/class-getpaid-stripe-gateway.php:1207
 msgid ""
 "<p>Hi {name},</p><p>We are having trouble processing your payment. <a "
 "class=\"btn btn-success\" href=\"{subscription_url}\">Update your payment "
 "details</a></p>"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1278
+#: includes/class-getpaid-stripe-gateway.php:1287
 msgid "Check Expired Subscriptions (Stripe)"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1280
+#: includes/class-getpaid-stripe-gateway.php:1289
 msgid "Checks if expired subscriptions are actually expired in Stripe."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1293
-#: includes/class-getpaid-stripe-gateway.php:1304
+#: includes/class-getpaid-stripe-gateway.php:1302
+#: includes/class-getpaid-stripe-gateway.php:1313
 msgid "Run"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1298
-#: includes/class-getpaid-stripe-gateway.php:1326
+#: includes/class-getpaid-stripe-gateway.php:1307
+#: includes/class-getpaid-stripe-gateway.php:1335
 msgid "Process past event (Stripe)"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1300
+#: includes/class-getpaid-stripe-gateway.php:1309
 msgid "Manually process any Stripe event that occurred in the last 30 days."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1327
+#: includes/class-getpaid-stripe-gateway.php:1336
 #: includes/update-card-modal.php:18
 msgid "Close"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1344
+#: includes/class-getpaid-stripe-gateway.php:1353
 msgid "Event ID"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1345
+#: includes/class-getpaid-stripe-gateway.php:1354
 msgid "For example, evt_3OPLyuIbYxW2G9BD07LRNDds"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1347
+#: includes/class-getpaid-stripe-gateway.php:1356
 msgid ""
 "Open your Stripe dashboard and then click on Developers > Events. Click on "
 "the event you want to process and copy the ID from the URL. You can also "
 "press Control + i to copy the event id."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1349
+#: includes/class-getpaid-stripe-gateway.php:1358
 msgid "The event ID must start with evt_."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1367
+#: includes/class-getpaid-stripe-gateway.php:1376
 #: includes/update-card-modal.php:49
 msgid "Cancel"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1368
+#: includes/class-getpaid-stripe-gateway.php:1377
 msgid "Process"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1412
+#: includes/class-getpaid-stripe-gateway.php:1421
 msgid "Your subscriptions have been checked."
 msgstr ""
 

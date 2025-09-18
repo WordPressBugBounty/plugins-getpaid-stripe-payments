@@ -295,7 +295,16 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 
 				$this->process_payment_intent( $_GET['payment_intent'], $invoice );
 
-				wp_safe_redirect( remove_query_arg( array( 'payment_intent', 'payment_intent_client_secret', 'redirect_status' ) ) );
+				$invoice = wpinv_get_invoice( $invoice->get_id() );
+
+				if ( $invoice->exists() && $invoice->is_paid() ) {
+					wpinv_send_to_success_page( array( 'invoice_key' => $invoice->get_key() ) );
+				}
+
+				$redirect = remove_query_arg( array( 'payment_intent', 'payment_intent_client_secret', 'redirect_status' ) );
+				$redirect = apply_filters( 'getpaid_stripe_process_payment_intent_redirect', $redirect, $invoice );
+
+				wp_safe_redirect( $redirect );
 				exit;
 			} catch ( Exception $e ) {
 				wpinv_set_error( 'stripe_error', $e->getMessage() );
