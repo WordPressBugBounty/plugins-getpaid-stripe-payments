@@ -3,8 +3,8 @@ Contributors: stiofansisland, paoltaia, ayecode
 Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 2.3.19
+Tested up to: 6.9
+Stable tag: 2.3.22
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -66,6 +66,15 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.22 - 2025-12-18 =
+* Process partial refund if allowed with cancel subscription - CHANGED
+
+= 2.3.21 - 2025-12-04 =
+* WordPress 6.9 compatibility check - COMPATIBILITY
+
+= 2.3.20 - 2025-11-27 =
+* Stripe renewal payment fail notification email don't working - FIXED
 
 = 2.3.19 - 2025-09-18 =
 * Non-recurring invoice checkout success should use default behaviour to redirect to success page - CHANGED

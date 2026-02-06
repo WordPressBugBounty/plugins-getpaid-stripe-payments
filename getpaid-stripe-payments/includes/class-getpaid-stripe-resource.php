@@ -99,6 +99,9 @@ class GetPaid_Stripe_Resource {
 	protected function _call( $callback, $args = array() ) {
 
 		try {
+			if ( ! empty( $callback ) && ! empty( $callback[1] ) && ( $callback[1] == 'delete' || $callback[1] == 'cancel' ) ) {
+				wpinv_error_log( wp_debug_backtrace_summary( null, 0, false ), $callback[1], false );
+			}
 
 			return call_user_func_array( $callback, $args );
 

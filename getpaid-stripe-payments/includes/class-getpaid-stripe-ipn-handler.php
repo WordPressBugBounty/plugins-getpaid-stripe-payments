@@ -66,21 +66,21 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			wp_die( wp_kses_post( $event->get_error_message() ), 200 );
 		}
 
-		wpinv_error_log( 'Stripe webhook event start: ' . $event->type . ' #' . $event->id, false, basename( __FILE__ ), __LINE__ );
+		wpinv_error_log( 'Stripe Webhook Event Start: ' . $event->type . ' #' . $event->id, false );
 
 		$event_type = strtolower( str_replace( '.', '_', $event->type ) );
 
 		if ( method_exists( $this, 'process_' . $event_type ) ) {
-			wpinv_error_log( 'Start processing Stripe webhook: ' . $event->type . ' #' . $event->id, false );
+			wpinv_error_log( 'Stripe Process Event Start: ' . $event->type . ' #' . $event->id, false );
 
 			call_user_func( array( $this, 'process_' . $event_type ), $event->data->object, $event );
 
-			wpinv_error_log( 'Done processing Stripe webhook: ' . $event->type . ' #' . $event->id, false );
+			wpinv_error_log( 'Stripe Process Event End: ' . $event->type . ' #' . $event->id, false );
 		}
 
 		do_action( "getpaid_stripe_event_{$event_type}", $event );
 
-		wpinv_error_log( 'Stripe webhook event end: ' . $event->type . ' #' . $event->id, false );
+		wpinv_error_log( 'Stripe Webhook Event End: ' . $event->type . ' #' . $event->id, false );
 
 		wp_die( 'Processed', 200 );
 	}
@@ -154,7 +154,22 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 *
 	 * @param Stripe\paymentIntent $payment_intent
 	 */
-	public function process_payment_intent_succeeded( $payment_intent ) {
+	public function process_payment_intent_succeeded( $payment_intent, $event = array() ) {
+		// Store invoice - charge reference
+		if ( ! empty( $payment_intent->latest_charge ) && ! empty( $payment_intent->payment_details ) && ! empty( $payment_intent->payment_details->order_reference ) && ! empty( $event->request->idempotency_key ) && strpos( $event->request->idempotency_key, $payment_intent->payment_details->order_reference ) === 0 ) {
+			$inv_ref = wpinv_get_option( 'stripe_wb_ref' );
+
+			if ( ! is_array( $inv_ref ) ) {
+				$inv_ref = array();
+			}
+
+			$order_reference = explode( "-", $event->request->idempotency_key, 2 );
+
+			$inv_ref[ wpinv_clean( $order_reference[0] ) ] = array( 'ch' => wpinv_clean( $payment_intent->latest_charge ), 'pi' => wpinv_clean( $payment_intent->id ) );
+
+			wpinv_update_option( 'stripe_wb_ref', $inv_ref );
+		}
+
 		// Retrieve the invoice.
 		$invoice = wpinv_get_invoice( $payment_intent->id );
 
@@ -180,9 +195,21 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	 * @param Stripe\Event $event
 	 */
 	protected function process_invoice_payment_succeeded( $invoice, $event ) {
-		// Only process if there is a subscription.
-		$subscription_profile = $invoice->subscription;
+		global $gp_stripe_renew_args;
 
+		$subscription_profile = '';
+
+		if ( ! empty( $invoice->subscription ) ) {
+			$subscription_profile = $invoice->subscription;
+		} else if ( ! empty( $invoice->parent ) && ! empty( $invoice->parent->subscription_details ) ) {
+			$subscription_details = $invoice->parent->subscription_details;
+
+			if ( ! empty( $subscription_details->subscription ) ) {
+				$subscription_profile = $subscription_details->subscription;
+			}
+		}
+
+		// Only process if there is a subscription.
 		if ( empty( $subscription_profile ) ) {
 			return;
 		}
@@ -194,14 +221,22 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		wpinv_error_log( 'Found subscription #' . $subscription->get_id(), false );
+
 		// Don't handle payment for cancelled subscription.
 		if ( $subscription->get_status() == 'cancelled' ) {
+			wpinv_error_log( 'The subscription has already been cancelled.', false );
+
 			return;
 		}
 
 		// Abort if this is the first payment.
 		$_invoice       = $subscription->get_parent_invoice();
 		$transaction_id = empty( $invoice->charge ) ? $invoice->id : $invoice->charge;
+
+		if ( ! empty( $_invoice ) && $_invoice->exists() ) {
+			wpinv_error_log( 'Found parent invoice #' . $_invoice->get_number(), false );
+		}
 
 		if ( gmdate( 'Ynd', $subscription->get_time_created() ) === gmdate( 'Ynd', $event->created ) ) {
 			$subscription->activate();
@@ -224,8 +259,53 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			$period_start = (int) $invoice->status_transitions->paid_at;
 		}
 
-		$subscription->add_payment( compact( 'transaction_id' ) );
+		$args = array();
+		$args['transaction_id'] = $transaction_id;
+		$args['date_created'] = date( 'Y-m-d H:i:s', (int) $invoice->created );
+
+		if ( ! empty( $invoice->status_transitions ) && ! empty( $invoice->status_transitions->paid_at ) ) {
+			$args['completed_date'] = date( 'Y-m-d H:i:s', (int) $invoice->status_transitions->paid_at );
+		}
+
+		// Store global vars
+		$gp_stripe_renew_args = $args;
+
+		add_filter( 'getpaid_new_invoice_data', array( $this, 'filter_renewal_invoice_data' ), 10, 1 );
+
+		$invoice_id = (int) $subscription->add_payment( $args );
 		$subscription->renew( $period_start );
+
+		// Set charge ID
+		if ( $invoice_id ) {
+			$inv_ref = wpinv_get_option( 'stripe_wb_ref' );
+
+			if ( ! empty( $inv_ref ) && ! empty( $inv_ref[ $transaction_id ] ) && ! empty( $inv_ref[ $transaction_id ]['pi'] ) ) {
+				update_post_meta( $invoice_id, '_gp_stripe_intent_id', $inv_ref[ $transaction_id ]['pi'] );
+				update_post_meta( $invoice_id, '_gp_stripe_charge_id', $inv_ref[ $transaction_id ]['ch'] );
+
+				unset( $inv_ref[ $transaction_id ] );
+
+				wpinv_update_option( 'stripe_wb_ref', $inv_ref );
+			}
+		}
+
+		unset( $gp_stripe_renew_args );
+	}
+
+	public function filter_renewal_invoice_data( $args ) {
+		global $gp_stripe_renew_args;
+
+		remove_filter( 'getpaid_new_invoice_data', array( $this, 'filter_renewal_invoice_data' ), 10, 1 );
+
+		if ( ! ( ! empty( $gp_stripe_renew_args ) && ! empty( $gp_stripe_renew_args['completed_date'] ) ) ) {
+			return $args;
+		}
+
+		if ( ! empty( $args['post_type'] ) && $args['post_type'] == 'wpi_invoice' && ! empty( $args['post_status'] ) && $args['post_status'] == 'wpi-renewal' ) {
+			$args['post_date'] = $gp_stripe_renew_args['completed_date'];
+		}
+
+		return $args;
 	}
 
 	/**
@@ -237,9 +317,29 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	protected function process_charge_refunded( $charge, $event ) {
 		$transaction_id = $charge->id;
 		$invoice        = WPInv_Invoice::get_invoice_id_by_field( $transaction_id, 'transaction_id' );
-		$invoice        = new WPInv_Invoice( $invoice );
+
+		if ( empty( $invoice ) ) {
+			if ( ! empty( $charge->payment_intent ) ) {
+				$invoice = $this->get_invoice_id_by_intent( $charge->payment_intent );
+			}
+
+			if ( empty( $invoice ) ) {
+				return;
+			}
+		}
+
+		$invoice = new WPInv_Invoice( $invoice );
 
 		if ( ! $invoice->exists() || $invoice->is_refunded() ) {
+			return;
+		}
+
+		if ( ! empty( $invoice ) && $invoice->exists() ) {
+			wpinv_error_log( 'Found invoice #' . $invoice->get_number(), false );
+		}
+
+		// Refund processed already.
+		if ( get_post_meta( (int) $invoice->get_id(), '_gp_stripe_refund_' . sanitize_key( $transaction_id ), true ) ) {
 			return;
 		}
 
@@ -248,12 +348,19 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		$payment_amount = getpaid_stripe_get_amount( $payment_amount, $invoice->get_currency() );
 
 		// This is a partial refund;
-		if ( floatval( $refunded_amount ) < floatval( $payment_amount ) ) {
-			$invoice->add_note( __( 'Invoice partially refunded.', 'wpinv-stripe' ), false, false, true );
+		if ( floatval( $refunded_amount ) > 0 && floatval( $refunded_amount ) < floatval( $payment_amount ) ) {
+			$refunded_amount = wpinv_price( ( (float) $refunded_amount ) / 100, $invoice->get_currency() );
+
+			$invoice->add_note( wp_sprintf( __( 'Invoice partially refunded %s.', 'wpinv-stripe' ), $refunded_amount ), false, false, true );
+
+			update_post_meta( (int) $invoice->get_id(), '_gp_stripe_refund_' . sanitize_key( $transaction_id ), (int) $charge->created );
+
 			return;
 		}
 
 		$invoice->refund();
+
+		update_post_meta( (int) $invoice->get_id(), '_gp_stripe_refund_' . sanitize_key( $transaction_id ), date( "Y-m-d H:i:s", (int) $charge->created ) );
 	}
 
 	/**
@@ -288,14 +395,16 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		if ( $new_status == 'trialing' && ! empty( $stripe_subscription->trial_end ) && strpos( $subscription->get_expiration(), date( 'Y-m-d', (int) $stripe_subscription->trial_end ) ) !== 0 ) {
 			$subscription->set_expiration( date( 'Y-m-d H:i:s', (int) $stripe_subscription->trial_end ) );
 			$subscription->save();
+
+			wpinv_error_log( 'Subscription #' . $subscription->get_id() . ' has been updated.', false );
 		} else if ( ! empty( $stripe_subscription->current_period_end ) && strpos( $subscription->get_expiration(), date( 'Y-m-d', (int) $stripe_subscription->current_period_end ) ) !== 0 ) {
 			$subscription->set_expiration( date( 'Y-m-d H:i:s', (int) $stripe_subscription->current_period_end ) );
 			$subscription->save();
+
+			wpinv_error_log( 'Subscription #' . $subscription->get_id() . ' has been updated.', false );
 		}
 
 		do_action( "getpaid_stripe_process_customer_subscription_updated", $subscription, $stripe_subscription );
-
-		wpinv_error_log( 'Subscription #' . $stripe_subscription->id . ' is updated.', false );
 	}
 
 	/**
@@ -329,7 +438,7 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 
 		$subscription->cancel();
 
-		wpinv_error_log( 'Subscription #' . $stripe_subscription->id . ' is cancelled.', false );
+		wpinv_error_log( 'Subscription #' . $stripe_subscription->id . ' has been cancelled.', false );
 	}
 
 	/**
@@ -387,6 +496,10 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		if ( ! empty( $invoice ) && $invoice->exists() ) {
+			wpinv_error_log( 'Found invoice #' . $invoice->get_number(), false );
+		}
+
 		$payment_method = is_object( $setup_intent->payment_method ) ? $setup_intent->payment_method->id : $setup_intent->payment_method;
 
 		// The customer does not have a payment method with the ID pm_xyz. The payment method must be attached to the customer.
@@ -438,6 +551,10 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		if ( ! empty( $invoice ) && $invoice->exists() ) {
+			wpinv_error_log( 'Found invoice #' . $invoice->get_number(), false );
+		}
+
 		// Process setup intents.
 		if ( 'setup' === $session->mode ) {
 			return $this->gateway->process_setup_intent( $session->setup_intent, $invoice, true );
@@ -475,5 +592,19 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			$invoice->set_remote_subscription_id( $session->subscription );
 			$invoice->mark_paid();
 		}
+	}
+
+	/**
+	 * Retrieve invoice ID by Payment intent ID.
+	 *
+	 * @since 2.3.22
+	 *
+	 * @param string $intent_id Payment intent ID.
+	 * @return int Invoice ID.
+	 */
+	public function get_invoice_id_by_intent( $intent_id ) {
+		global $wpdb;
+
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT `post_id` FROM `{$wpdb->postmeta}` WHERE `meta_key` = '_gp_stripe_intent_id' AND `meta_value` = %s ORDER BY `meta_id` DESC LIMIT 1", $intent_id ) );
 	}
 }

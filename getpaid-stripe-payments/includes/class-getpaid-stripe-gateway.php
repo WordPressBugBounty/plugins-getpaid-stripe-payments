@@ -706,12 +706,11 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 * @throws Exception
 	 */
 	public function get_stripe( $invoice = null ) {
-
 		//Set app info for all requests @link https://stripe.com/docs/building-plugins#setappinfo
 		\Stripe\Stripe::setAppInfo(
-			'WordPress Invoicing',
-			WPINV_VERSION,
-			esc_url( 'https://wpinvoicing.com/' ),
+			'WordPress GetPaid Stripe Payments',
+			WPINV_STRIPE_VERSION,
+			'https://wpgetpaid.com',
 			'pp_partner_FounODljaTLlZL'
 		);
 
@@ -734,7 +733,6 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 				'stripe_version' => WPINV_STRIPE_API_VERSION,
 			)
 		);
-
 	}
 
 	/**
@@ -800,7 +798,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 
 		$disabled = wpinv_get_option( 'stripe_disable_update_card', 0 );
 
-		if ( empty( $disabled ) && $subscription->is_active() && $subscription->get_gateway() === $this->id ) {
+		if ( empty( $disabled ) && ( $subscription->is_active() || $subscription->has_status( 'failing' ) ) && $subscription->get_gateway() === $this->id ) {
 			$setup_intent = new GetPaid_Stripe_Setup_Intent( $this, $subscription );
 			$error        = '';
 			$setup_secret = '';
@@ -907,7 +905,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 
 			$error = sprintf(
 				// translators: %s is the subscription ID.
-				__( 'An error occured while trying to cancel subscription #%s in Stripe.', 'wpinv-stripe' ),
+				__( 'An error occurred while trying to cancel subscription #%s in Stripe.', 'wpinv-stripe' ),
 				$subscription->get_id()
 			);
 
@@ -952,7 +950,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			$invoice->add_system_note(
 				sprintf(
 					// translators: %s is the error message.
-					__( 'An error occured while trying to refund invoice #%1$s in Stripe: %2$s', 'wpinv-stripe' ),
+					__( 'An error occurred while trying to refund invoice #%1$s in Stripe: %2$s', 'wpinv-stripe' ),
 					$invoice->get_id(),
 					$result->get_error_message()
 				)
@@ -1223,6 +1221,8 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 */
 	public function filter_email_triggers( $triggers ) {
 		$triggers['getpaid_stripe_subscription_past_due'] = 'stripe_payment_failed';
+		$triggers['getpaid_subscription_failing'] = 'stripe_payment_failed';
+
 		return $triggers;
 	}
 
@@ -1232,14 +1232,11 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function init_email_type_hook( $email_type, $hook ) {
-
 		if ( in_array( $email_type, array( 'stripe_payment_failed' ), true ) ) {
-
 			$email_type = "send_{$email_type}_email";
+
 			add_action( $hook, array( $this, $email_type ), 100, 2 );
-
 		}
-
 	}
 
 	/**
@@ -1250,8 +1247,13 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 * @since 1.0.0
 	 */
 	public function send_stripe_payment_failed_email( $local_subscription, $stripe_subscription ) {
-		$email     = new GetPaid_Notification_Email( 'stripe_payment_failed', $local_subscription );
-		$sender    = getpaid()->get( 'subscription_emails' );
+		if ( ! ( ! empty( $local_subscription ) && $local_subscription->get_gateway() == 'stripe' ) ) {
+			return;
+		}
+
+		$email  = new GetPaid_Notification_Email( 'stripe_payment_failed', $local_subscription );
+		$sender = getpaid()->get( 'subscription_emails' );
+
 		return $sender->send_email( $local_subscription, $email, 'stripe_payment_failed' );
 	}
 
