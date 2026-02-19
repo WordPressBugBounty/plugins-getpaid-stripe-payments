@@ -56,6 +56,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		add_action( 'wpinv_stripe_connect', 'GetPaid_Stripe_Admin::display_connect_buttons' );
 
 		if ( $this->enabled ) {
+			add_filter( 'wpinv_errors', array( $this, 'register_notices' ) );
 			add_filter( 'getpaid_stripe_sandbox_notice', array( $this, 'sandbox_notice' ) );
 			add_action( 'getpaid_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'getpaid-single-subscription-page-actions', array( $this, 'show_update_payment_method_button' ) );
@@ -76,6 +77,22 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			add_action( 'wp', array( $this, 'maybe_process_setup_intent' ) );
 		}
 
+	}
+
+	/**
+	 * Registers custom notices.
+	 *
+	 * @param array $notices The notices.
+	 * @return array
+	 */
+	public function register_notices( $notices ) {
+		if ( isset( $_GET['wpinv-notice'] ) && 'wpinv_stripe_card_updated' === $_GET['wpinv-notice'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$notices['wpinv_stripe_card_updated'] = array(
+				'type' => 'success',
+				'text' => __( 'Payment method updated successfully.', 'wpinv-stripe' ),
+			);
+		}
+		return $notices;
 	}
 
 	/**
@@ -460,8 +477,14 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			// Payment method update setup intent.
 			if ( isset( $_GET['setup_intent'] ) && isset( $_GET['subscription'] ) ) {
 				$subscription = getpaid_get_subscription( absint( $_GET['subscription'] ) );
-				$this->process_payment_method_update( $_GET['setup_intent'], $subscription );
-				wp_safe_redirect( remove_query_arg( array( 'setup_intent', 'setup_intent_client_secret', 'redirect_status' ) ) );
+				$result       = $this->process_payment_method_update( $_GET['setup_intent'], $subscription );
+				$redirect_url = remove_query_arg( array( 'setup_intent', 'setup_intent_client_secret', 'redirect_status' ) );
+
+				if ( true === $result ) {
+					$redirect_url = add_query_arg( 'wpinv-notice', 'wpinv_stripe_card_updated', $redirect_url );
+				}
+
+				wp_safe_redirect( $redirect_url );
 				exit;
 			}
 		} catch ( Exception $e ) {
@@ -475,12 +498,13 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 *
 	 * @param string $setup_intent_id Payment intent ID.
 	 * @param WPInv_Subscription|false $subscription The subscription.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public function process_payment_method_update( $setup_intent_id, $subscription ) {
 
 		// Abort if no subscription.
 		if ( empty( $subscription ) ) {
-			return;
+			return new WP_Error( 'invalid_subscription', __( 'Invalid subscription.', 'wpinv-stripe' ) );
 		}
 
 		// The setup intent object.
@@ -490,10 +514,10 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		// Abort if an error occurred.
 		if ( is_wp_error( $result ) ) {
 			wpinv_set_error( $result->get_error_code(), $result->get_error_message() );
-		} else {
-			wpinv_set_error( 'wpinv_payment_success', __( 'Payment method update successful.', 'wpinv-stripe' ), 'success' );
+			return $result;
 		}
 
+		return true;
 	}
 
 	/**

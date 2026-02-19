@@ -328,6 +328,22 @@ class GetPaid_Stripe_Admin {
 				'std'     => array( 'card' ),
 			),
 
+			'stripe_locale'   => array(
+				'id'          => 'stripe_locale',
+				'type'        => 'select',
+				'name'        => __( 'Stripe Checkout Language', 'wpinv-stripe' ),
+				'desc'        => __( 'Select language to display Stripe checkout popup. "Auto": Display Checkout in the user\'s preferred language, if available. English will be used by default. "Site Language": Display Checkout in site language.', 'wpinv-stripe' ),
+				'options'     => array_merge(
+					array( 
+						'auto' => __( 'Auto', 'wpinv-stripe' ),
+						'site' => __( 'Site Language', 'wpinv-stripe' )
+					),
+					wpinv_stripe_allowed_locales()
+				),
+				'placeholder' => __( 'Select a locale', 'wpinv-stripe' ),
+				'std'         => 'auto'
+			),
+
 			'stripe_ipn_url'              => array(
 				'type'   => 'text',
 				'id'     => 'stripe_ipn_url',

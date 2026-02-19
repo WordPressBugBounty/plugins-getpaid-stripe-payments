@@ -9,6 +9,26 @@ jQuery( function($) {
 	// Create a Stripe client.
 	var stripe = Stripe( GetPaid_Stripe.stripePublishableKey );
 
+	/**
+	 * Hook system for customizing Stripe Elements options.
+	 * 
+	 * Use jQuery events to filter options:
+	 * - 'getpaid_stripe_filter_elements_options': Filter stripe.elements() options
+	 * - 'getpaid_stripe_filter_payment_element_options': Filter elements.create('payment') options
+	 * 
+	 * Example: Restrict countries to Australia only
+	 * jQuery( document ).on( 'getpaid_stripe_filter_payment_element_options', function( e, options, form ) {
+	 *     options.fields = options.fields || {};
+	 *     options.fields.billingDetails = options.fields.billingDetails || {};
+	 *     options.fields.billingDetails.address = options.fields.billingDetails.address || {};
+	 *     options.fields.billingDetails.address.country = 'never';
+	 *     options.defaultValues = options.defaultValues || {};
+	 *     options.defaultValues.billingDetails = options.defaultValues.billingDetails || {};
+	 *     options.defaultValues.billingDetails.address = options.defaultValues.billingDetails.address || {};
+	 *     options.defaultValues.billingDetails.address.country = 'AU';
+	 * });
+	 */
+
 	// Set-up forms.
 	$( 'body' ).on( 'getpaid_setup_payment_form', function( e, form ) {
 
@@ -40,10 +60,14 @@ jQuery( function($) {
 			try {
 
 				// Create an instance of Elements.
-				var elements = stripe.elements({ clientSecret: form_state ? form_state.stripe_payment_intent_secret : '' });
+				var elementsOptions = { clientSecret: (form_state ? form_state.stripe_payment_intent_secret : ''), locale: GetPaid_Stripe.locale };
+				$( 'body' ).trigger( 'getpaid_stripe_filter_elements_options', [ elementsOptions, form ] );
+				var elements = stripe.elements( elementsOptions );
 
 				// Create a payment element.
-				var element = elements.create( 'payment' );
+				var paymentElementOptions = {};
+				$( 'body' ).trigger( 'getpaid_stripe_filter_payment_element_options', [ paymentElementOptions, form ] );
+				var element = elements.create( 'payment', paymentElementOptions );
 
 				// Mount the element.
 				element.mount( '#' + stripe_id + ' .getpaid-stripe-elements-wrapper' );
@@ -177,10 +201,14 @@ jQuery( function($) {
 				if ( ! updateModalElements ) {
 
 					// Create an instance of Elements.
-					updateModalElements = stripe.elements({ clientSecret: $( this ).data( 'intent' ) });
+					var updateElementsOptions = { clientSecret: $( this ).data( 'intent' ), locale: GetPaid_Stripe.locale };
+					$( 'body' ).trigger( 'getpaid_stripe_filter_elements_options', [ updateElementsOptions, $( '#getpaid-stripe-update-payment-modal' ) ] );
+					updateModalElements = stripe.elements( updateElementsOptions );
 
 					// Create a payment element.
-					updateModalElement = updateModalElements.create( 'payment' );
+					var updatePaymentElementOptions = {};
+					$( 'body' ).trigger( 'getpaid_stripe_filter_payment_element_options', [ updatePaymentElementOptions, $( '#getpaid-stripe-update-payment-modal' ) ] );
+					updateModalElement = updateModalElements.create( 'payment', updatePaymentElementOptions );
 
 					// Mount the element.
 					updateModalElement.mount( '.getpaid-stripe-update-payment-method' );
