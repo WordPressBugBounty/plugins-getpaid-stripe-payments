@@ -126,7 +126,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		}
 
 		// Load Stripe.js globally or only on checkout pages.
-		if ( ! wpinv_is_checkout() && ! $this->load_stripe_js_globally() ) {
+		if ( ! ( isset( $_GET['getpaid_embed'] ) || wpinv_is_checkout() || $this->load_stripe_js_globally() ) ) {
 			return;
 		}
 

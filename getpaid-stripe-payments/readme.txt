@@ -4,7 +4,7 @@ Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 2.3.23
+Stable tag: 2.3.24
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -66,6 +66,9 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.24 - 2026-02-26 =
+* Stripe form is not loading on embed checkout when load Stripe.js on all pages is disabled - FIXED
 
 = 2.3.23 - 2026-02-19 =
 * Display success message after updating card details - FIXED
