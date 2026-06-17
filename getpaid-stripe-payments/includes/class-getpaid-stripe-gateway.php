@@ -119,14 +119,34 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	 */
 	public function enqueue_scripts() {
 
+		// Load Stripe.js globally, on the embed checkout, or only on checkout pages.
+		if ( ! ( isset( $_GET['getpaid_embed'] ) || wpinv_is_checkout() || $this->load_stripe_js_globally() ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+
+		$this->enqueue_stripe_scripts();
+	}
+
+	/**
+	 * Enqueues Stripe.js and the plugin's frontend script.
+	 *
+	 * Unlike enqueue_scripts(), this bypasses the checkout/global gate so the
+	 * scripts can be loaded on demand on pages that need them (e.g. the
+	 * "Update Payment Card" button on UsersWP membership / subscription pages)
+	 * even when "Load Stripe.js globally" is disabled.
+	 *
+	 * @since 2.3.25
+	 */
+	public function enqueue_stripe_scripts() {
+
 		$key = $this->is_sandbox() ? wpinv_get_option( 'stripe_test_publishable_key' ) : wpinv_get_option( 'stripe_live_publishable_key' );
 
 		if ( empty( $key ) || $this->redirect_to_stripe() ) {
 			return;
 		}
 
-		// Load Stripe.js globally or only on checkout pages.
-		if ( ! ( isset( $_GET['getpaid_embed'] ) || wpinv_is_checkout() || $this->load_stripe_js_globally() ) ) {
+		// Avoid enqueuing/localizing more than once per request.
+		if ( wp_script_is( 'wpinv-stripe-script', 'enqueued' ) ) {
 			return;
 		}
 
@@ -823,6 +843,11 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		$disabled = wpinv_get_option( 'stripe_disable_update_card', 0 );
 
 		if ( empty( $disabled ) && ( $subscription->is_active() || $subscription->has_status( 'failing' ) ) && $subscription->get_gateway() === $this->id ) {
+
+			// Ensure Stripe.js is loaded on this page (e.g. UsersWP membership /
+			// subscription pages) even when "Load Stripe.js globally" is off.
+			$this->enqueue_stripe_scripts();
+
 			$setup_intent = new GetPaid_Stripe_Setup_Intent( $this, $subscription );
 			$error        = '';
 			$setup_secret = '';
