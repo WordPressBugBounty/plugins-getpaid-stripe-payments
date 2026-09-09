@@ -174,3 +174,74 @@ function getpaid_stripe_get_amount( $amount, $currency = '' ) {
 		return absint( wpinv_format_amount( ( (float) $amount * 100 ), wpinv_decimals(), true ) ); // In cents.
 	}
 }
+
+/**
+ * Retrieves the enabled payment methods.
+ *
+ * @since 2.3.26
+ *
+ * @param bool $recurring Whether the payment method will be re-used.
+ * @return array Array of payment method types.
+ */
+function getpaid_stripe_payment_method_types( $recurring = false ) {
+	$recurring = (bool) $recurring;
+
+	$payment_methods = wpinv_get_option( 'stripe_payment_methods', array() );
+
+	if ( empty( $payment_methods ) || ! is_array( $payment_methods ) ) {
+		$payment_methods = array( 'card' );
+	} else {
+		$payment_methods = array_map( 'sanitize_key', $payment_methods );
+	}
+
+	// Not all payment methods can be re-used.
+	if ( $recurring ) {
+		$allowed         = wp_parse_list( 'acss_debit au_becs_debit bacs_debit bancontact blik boleto card card_present ideal link sepa_debit sofort us_bank_account' );
+		$payment_methods = array_intersect( $payment_methods, $allowed );
+	}
+
+	/**
+	 * Filters the enabled Stripe payment method types.
+	 *
+	 * @since 2.3.26
+	 *
+	 * @param array $payment_methods Array of payment method slugs.
+	 * @param bool  $recurring       Whether the payment method will be re-used.
+	 */
+	$payment_methods = apply_filters( 'getpaid_stripe_payment_method_types', $payment_methods, $recurring );
+
+	// Ensure final output is strictly a clean, unique, indexed array of strings.
+	if ( empty( $payment_methods ) || ! is_array( $payment_methods ) ) {
+		$payment_methods = array( 'card' );
+	} else {
+		$payment_methods = array_map( 'sanitize_key', $payment_methods );
+	}
+
+	return array_values( array_unique( array_filter( $payment_methods ) ) );
+}
+
+/**
+ * Retrieves the digital wallets.
+ *
+ * @since 2.3.26
+ *
+ * @return array Array of digital wallets.
+ */
+function getpaid_stripe_digital_wallets() {
+	$payment_methods = getpaid_stripe_payment_method_types();
+
+	$wallets = array(
+		'apple_pay'  => 'auto',
+		'google_pay' => 'auto',
+		'link'       => in_array( 'link', $payment_methods ) ? 'auto' : 'never'
+	);
+
+	/**
+	 * Filters the Stripe digital wallets.
+	 *
+	 * @since 2.3.26
+	 *
+	 * @param array $wallets Array of digital wallets.
+	 */
+	return apply_filters( 'getpaid_stripe_digital_wallets', $wallets );
+}

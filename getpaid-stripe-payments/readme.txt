@@ -3,8 +3,8 @@ Contributors: stiofansisland, paoltaia, ayecode
 Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 2.3.25
+Tested up to: 7.1
+Stable tag: 2.3.26
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -48,6 +48,10 @@ The GetPaid plugin is a Stripe verified partner. Being a Verified Partner, our o
 
 With the Stripe Payment for GetPaid plugin you don't need to gather API and Secret keys on the payment gateway website, but you can simply connect your Stripe account from the plugin settings and automatically fetch the required information. 
 
+== Security ==
+
+To report a security vulnerability, please review our [vulnerability disclosure policy](https://ayecode.io/vulnerability-disclosure-policy/).
+
 == Installation ==
 
 1. Upload 'wpinv-stripe-payment' directory to the '/wp-content/plugins/' directory
@@ -66,6 +70,11 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.26 - 2026-09-09 =
+* Apple Pay and Google Pay failed to show their payment sheet at checkout - FIXED
+* Link payment option remained visible in checkout when disabled in gateway settings - FIXED
+* Payment methods disabled in the settings like Link & Klarna are still showing at checkout - FIXED
 
 = 2.3.25 - 2026-06-17 =
 * Load Stripe.js on subscription pages so the "Update Payment Card" button works when "Load Stripe.js globally" is disabled - FIXED

@@ -164,6 +164,8 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 				'button_type'          => wpinv_get_option( 'stripe_payment_request_button_type', 'default' ),
 				'button_theme'         => wpinv_get_option( 'stripe_payment_request_button_theme', 'dark' ),
 				'unknownError'         => __( 'An unknown error occurred. Please try again.', 'wpinv-stripe' ),
+				'paymentMethods'       => getpaid_stripe_payment_method_types(),
+				'wallets'              => getpaid_stripe_digital_wallets()
 			)
 		);
 	}

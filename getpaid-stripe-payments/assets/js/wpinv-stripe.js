@@ -65,7 +65,7 @@ jQuery( function($) {
 				var elements = stripe.elements( elementsOptions );
 
 				// Create a payment element.
-				var paymentElementOptions = {};
+				var paymentElementOptions = { wallets: getPaidStripeWallets() };
 				$( 'body' ).trigger( 'getpaid_stripe_filter_payment_element_options', [ paymentElementOptions, form ] );
 				var element = elements.create( 'payment', paymentElementOptions );
 
@@ -94,6 +94,20 @@ jQuery( function($) {
 		})
 	})
 
+	// Collect wallet details while the user activation is still valid.
+	$( 'body' ).on( 'getpaid_payment_form_before_submit', function( e, data ) {
+
+		var form     = data.form;
+		var elements = form.data( 'getpaid_stripe_elements' );
+
+		// Abort if not paying with Stripe.
+		if ( ! elements || 'stripe' !== form.find( 'input[name="wpi-gateway"]:checked' ).val() ) {
+			return;
+		}
+
+		form.data( 'getpaid_stripe_submit', elements.submit() );
+	});
+
 	// Handle form submission.
 	$( 'body' ).on( 'getpaid_process_stripe_payment', function( e, data, form ) {
 
@@ -108,60 +122,57 @@ jQuery( function($) {
 		// Confirm the payment.
 		wpinvBlock( form );
 
-		var elements = form.data( 'getpaid_stripe_elements' );
+		var elements  = form.data( 'getpaid_stripe_elements' );
+		var submitted = form.data( 'getpaid_stripe_submit' ) || elements.submit();
 
-		elements
-			.fetchUpdates()
-			.then(function(result) {
+		form.removeData( 'getpaid_stripe_submit' );
 
-				// Handle result.error
-				if ( result.error ) {
-					displayError.addClass( 'alert alert-danger mt-2' ).text( result.error.message );
-					wpinvUnblock( form );
+		submitted.then(function(result) {
+
+			// Handle result.error
+			if ( result.error ) {
+				displayError.addClass( 'alert alert-danger mt-2' ).text( result.error.message );
+				wpinvUnblock( form );
+				return;
+			}
+
+			// Process the payment.
+			var confirmation;
+			if ( data.is_setup ) {
+				confirmation = stripe.confirmSetup({
+					elements: elements,
+					confirmParams: {
+						return_url: data.redirect,
+					},
+				})
+			} else {
+				confirmation = stripe.confirmPayment({
+					elements: elements,
+					confirmParams: {
+						return_url: data.redirect,
+					},
+				})
+			}
+
+			// Check for errors.
+			confirmation.then(function( result ) {
+				if ( ! result.error ) {
 					return;
 				}
 
-				// Process the payment.
-				var confirmation;
-				if ( data.is_setup ) {
-					confirmation = stripe.confirmSetup({
-						elements: elements,
-						confirmParams: {
-							return_url: data.redirect,
-						},
-					})
+				wpinvUnblock( form );
+
+				// Only reached on an immediate error, else the customer is redirected.
+				if ( result.error.message ) {
+					displayError.addClass( 'alert alert-danger mt-2' ).text( result.error.message );
 				} else {
-					confirmation = stripe.confirmPayment({
-						elements: elements,
-						confirmParams: {
-							return_url: data.redirect,
-						},
-					})
+					displayError.addClass( 'alert alert-danger mt-2' ).text( GetPaid_Stripe.unknownError );
 				}
 
-				// Check for errors.
-				confirmation.then(function( result ) {
-					if ( ! result.error ) {
-						return;
-					}
-
-					wpinvUnblock( form );
-
-					// This point will only be reached if there is an immediate error when
-					// confirming the payment. Otherwise, your customer will be redirected to
-					// your `return_url`. For some payment methods like iDEAL, your customer will
-					// be redirected to an intermediate site first to authorize the payment, then
-					// redirected to the `return_url`.
-					if ( result.error.message ) {
-						displayError.addClass( 'alert alert-danger mt-2' ).text( result.error.message );
-					} else {
-						displayError.addClass( 'alert alert-danger mt-2' ).text( GetPaid_Stripe.unknownError );
-					}
-
-					console.log( result );
-				});
-
+				console.log( result );
 			});
+
+		});
 	});
 
 	// Update payment methods.
@@ -206,7 +217,7 @@ jQuery( function($) {
 					updateModalElements = stripe.elements( updateElementsOptions );
 
 					// Create a payment element.
-					var updatePaymentElementOptions = {};
+					var updatePaymentElementOptions = { wallets: getPaidStripeWallets() };
 					$( 'body' ).trigger( 'getpaid_stripe_filter_payment_element_options', [ updatePaymentElementOptions, $( '#getpaid-stripe-update-payment-modal' ) ] );
 					updateModalElement = updateModalElements.create( 'payment', updatePaymentElementOptions );
 
@@ -280,3 +291,29 @@ jQuery( function($) {
 	}
 
 });
+
+function getPaidStripeWallets() {
+	var wallets = {
+		applePay: 'auto',
+		googlePay: 'auto',
+		link: 'auto'
+	};
+
+	var oWallets = (typeof GetPaid_Stripe !== 'undefined' && GetPaid_Stripe !== null) ? GetPaid_Stripe.wallets : null;
+
+	if (oWallets && typeof oWallets === 'object') {
+		if (oWallets.applePay === 'never' || oWallets.apple_pay === 'never') {
+			wallets.applePay = 'never';
+		}
+
+		if (oWallets.googlePay === 'never' || oWallets.google_pay === 'never') {
+			wallets.googlePay = 'never';
+		}
+
+		if (oWallets.link === 'never') {
+			wallets.link = 'never';
+		}
+	}
+
+	return wallets;
+}

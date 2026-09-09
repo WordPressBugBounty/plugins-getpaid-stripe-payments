@@ -46,6 +46,13 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 	public $current_amount = 0;
 
 	/**
+	 * Cached remote intent.
+	 *
+	 * @var \Stripe\PaymentIntent|\Stripe\SetupIntent|WP_Error|null
+	 */
+	protected $remote_intent = null;
+
+	/**
 	 * Returns the remote payment intent's id.
 	 *
 	 * @return string
@@ -84,6 +91,75 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Retrieves the remote intent.
+	 *
+	 * @return \Stripe\PaymentIntent|\Stripe\SetupIntent|WP_Error
+	 */
+	public function get() {
+
+		if ( null === $this->remote_intent ) {
+			$this->remote_intent = parent::get();
+		}
+
+		return $this->remote_intent;
+	}
+
+	/**
+	 * Retrieves the enabled payment methods.
+	 *
+	 * @param bool $recurring Whether the payment method will be re-used.
+	 * @return array
+	 */
+	public function get_enabled_payment_method_types( $recurring = false ) {
+
+		$payment_methods = wpinv_get_option( 'stripe_payment_methods', array() );
+
+		if ( empty( $payment_methods ) ) {
+			$payment_methods = array( 'card' );
+		}
+
+		// Not all payment methods can be re-used.
+		if ( $recurring ) {
+			$allowed         = wp_parse_list( 'acss_debit au_becs_debit bacs_debit bancontact blik boleto card card_present ideal link sepa_debit sofort us_bank_account' );
+			$payment_methods = array_intersect( $payment_methods, $allowed );
+		}
+
+		$payment_methods = apply_filters( 'getpaid_stripe_payment_method_types', array_values( $payment_methods ) );
+
+		return array_values( array_unique( array_filter( (array) $payment_methods ) ) );
+	}
+
+	/**
+	 * Checks if an existing intent's payment methods are outdated.
+	 *
+	 * @param array $payment_method_types The enabled payment methods.
+	 * @return bool
+	 */
+	protected function should_update_payment_method_types( $payment_method_types ) {
+
+		if ( empty( $payment_method_types ) ) {
+			return false;
+		}
+
+		$intent = $this->get();
+
+		if ( is_wp_error( $intent ) || empty( $intent->payment_method_types ) ) {
+			return false;
+		}
+
+		$current = (array) $intent->payment_method_types;
+		sort( $current );
+		sort( $payment_method_types );
+
+		if ( $current === $payment_method_types ) {
+			return false;
+		}
+
+		// Stripe only allows the list to change before a payment method is attached.
+		return 'requires_payment_method' === $intent->status && empty( $intent->payment_method );
 	}
 
 	/**
@@ -159,22 +235,12 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 				) : '',
 		);
 
-		// Prepare args.
-		$payment_methods = wpinv_get_option( 'stripe_payment_methods', array() );
-
-		if ( empty( $payment_methods ) ) {
-			$payment_methods = array( 'card' );
-		}
-
 		// Subscriptions.
 		if ( $this->object->has_recurring ) {
-			$allowed         = wp_parse_list( 'acss_debit au_becs_debit bacs_debit bancontact blik boleto card card_present ideal link sepa_debit sofort us_bank_account' );
-			$payment_methods = array_intersect( $payment_methods, $allowed );
-
 			$args['setup_future_usage'] = 'off_session';
 		}
 
-		$args['payment_method_types'] = apply_filters( 'getpaid_stripe_payment_method_types', array_values( $payment_methods ) );
+		$args['payment_method_types'] = $this->get_enabled_payment_method_types( $this->object->has_recurring );
 
 		$remote_id = $this->get_remote_id();
 
@@ -188,7 +254,8 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 			}
 		}
 
-		if ( $this->get_remote_id() ) {
+		// Only sent on an existing intent when the enabled payment methods changed.
+		if ( ! empty( $remote_id ) && ! $this->should_update_payment_method_types( $args['payment_method_types'] ) ) {
 			unset( $args['payment_method_types'] );
 		}
 
@@ -216,25 +283,17 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 		}
 
 		// Prepare args.
-		$payment_methods = wpinv_get_option( 'stripe_payment_methods', array() );
-
-		if ( empty( $payment_methods ) ) {
-			$payment_methods = array( 'card' );
-		}
-
-		$payment_methods = apply_filters( 'getpaid_stripe_payment_method_types', array_values( $payment_methods ) );
-		$allowed         = wp_parse_list( 'acss_debit au_becs_debit bacs_debit bancontact blik boleto card card_present ideal link sepa_debit sofort us_bank_account' );
-		$payment_methods = array_intersect( $payment_methods, $allowed );
-
 		$args = array(
 			'customer'             => $customer_id,
 			'metadata'             => $this->clean_metadata( $meta ),
-			'payment_method_types' => array_values( $payment_methods ), // card, acss_debit, au_becs_debit, bacs_debit, blik, boleto, ideal, link, us_bank_account, sepa_debit, sofort.
+			'payment_method_types' => $this->get_enabled_payment_method_types( true ), // card, acss_debit, au_becs_debit, bacs_debit, blik, boleto, ideal, link, us_bank_account, sepa_debit, sofort.
 		);
+
+		$remote_id = $this->get_remote_id();
 
 		if ( empty( $args['customer'] ) ) {
 			unset( $args['customer'] );
-		} else {
+		} elseif ( ! empty( $remote_id ) ) {
 			$setup_intent = $this->get();
 
 			if ( ! is_wp_error( $setup_intent ) && ! empty( $setup_intent->customer ) ) {
@@ -242,7 +301,8 @@ class GetPaid_Stripe_Elements_Payment_Intent extends GetPaid_Stripe_Resource {
 			}
 		}
 
-		if ( $this->get_remote_id() ) {
+		// Only sent on an existing intent when the enabled payment methods changed.
+		if ( ! empty( $remote_id ) && ! $this->should_update_payment_method_types( $args['payment_method_types'] ) ) {
 			unset( $args['payment_method_types'] );
 		}
 
