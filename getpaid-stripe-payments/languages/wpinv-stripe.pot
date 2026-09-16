@@ -1,9 +1,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GetPaid Stripe Payments 2.3.26\n"
+"Project-Id-Version: GetPaid Stripe Payments 2.3.27\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 17:25+0530\n"
+"POT-Creation-Date: 2026-09-16 20:37+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
@@ -353,7 +353,7 @@ msgid "Stripe Payment Intent ID: %s"
 msgstr ""
 
 #: includes/class-getpaid-stripe-gateway.php:429
-#: includes/class-getpaid-stripe-ipn-handler.php:244
+#: includes/class-getpaid-stripe-ipn-handler.php:868
 #: includes/class-getpaid-stripe-subscription.php:309
 #, php-format
 msgid "Stripe Charge ID: %s"
@@ -549,12 +549,71 @@ msgstr ""
 msgid "Your subscriptions have been checked."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:354
-#, php-format
-msgid "Invoice partially refunded %s."
+#: includes/class-getpaid-stripe-ipn-handler.php:122
+msgid "You are not allowed to process Stripe events."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:587
+#: includes/class-getpaid-stripe-ipn-handler.php:131
+msgid "Your link has expired. Please go back and try again."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:138
+msgid "No event id."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:142
+msgid "Invalid event id."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:153
+msgid "Error retrieving webhook"
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:159
+msgid "Unsupported event type."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:164
+#, php-format
+msgid "Processed %s event"
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:717
+#, php-format
+msgid "Stripe subscription payment failed for the Stripe invoice %s."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:720
+#, php-format
+msgid "Attempt: %d."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:724
+#, php-format
+msgid "Reason: %s"
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:728
+#, php-format
+msgid "Next attempt: %s."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:1073
+#, php-format
+msgid "Invoice fully refunded. Total refunded: %s."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:1078
+#, php-format
+msgid "Invoice partially refunded. Total refunded: %1$s of %2$s."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:1084
+#, php-format
+msgid "Invoice partially refunded %1$s. Total refunded: %2$s of %3$s."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:1380
 #, php-format
 msgid "Stripe Invoice ID: %s"
 msgstr ""
