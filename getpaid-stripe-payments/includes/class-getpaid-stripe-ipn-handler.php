@@ -877,6 +877,14 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		if ( isset( $invoice->amount_paid ) && isset( $invoice->currency ) ) {
+			$invoice_currency = strtoupper( wpinv_clean( $invoice->currency ) );
+			$amount_formatted = getpaid_stripe_get_amount_from_stripe( $invoice->amount_paid, $invoice_currency );
+			$amount_paid      = wpinv_format_amount( $amount_formatted ) . ' ' . $invoice_currency;
+
+			$_invoice->add_note( wp_sprintf( __( 'Stripe Invoice Amount Paid: %s', 'wpinv-stripe' ), wpinv_clean( $amount_paid ) ), false, false, true );
+		}
+
 		// Period start date.
 		$period_start = strtotime( date( 'Y-m-d H:i:00' ) );
 
@@ -886,7 +894,7 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 
 		$args = array();
 		$args['transaction_id'] = $transaction_id;
-		$args['date_created'] = date( 'Y-m-d H:i:s', (int) $invoice->created );
+		$args['date_created']   = date( 'Y-m-d H:i:s', (int) $invoice->created );
 
 		if ( ! empty( $invoice->status_transitions ) && ! empty( $invoice->status_transitions->paid_at ) ) {
 			$args['completed_date'] = date( 'Y-m-d H:i:s', (int) $invoice->status_transitions->paid_at );

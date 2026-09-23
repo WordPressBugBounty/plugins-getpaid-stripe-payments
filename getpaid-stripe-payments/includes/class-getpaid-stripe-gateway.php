@@ -424,7 +424,6 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 
 		// The payment succeeded.
 		if ( 'succeeded' === $payment_intent->status ) {
-
 			if ( ! empty( $payment_intent->latest_charge ) ) {
 				$invoice->add_note( wp_sprintf( __( 'Stripe Charge ID: %s', 'wpinv-stripe' ), wpinv_clean( $payment_intent->latest_charge ) ), false, false, true );
 
@@ -433,6 +432,14 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 				$invoice->add_note( wp_sprintf( __( 'Stripe Payment Intent ID: %s', 'wpinv-stripe' ), wpinv_clean( $payment_intent->id ) ), false, false, true );
 
 				$invoice->set_transaction_id( $payment_intent->id );
+			}
+
+			if ( isset( $payment_intent->amount ) && isset( $payment_intent->currency ) ) {
+				$intent_currency  = strtoupper( wpinv_clean( $payment_intent->currency ) );
+				$amount_formatted = getpaid_stripe_get_amount_from_stripe( $payment_intent->amount, $intent_currency );
+				$intent_amount    = wpinv_format_amount( $amount_formatted ) . ' ' . $intent_currency;
+
+				$invoice->add_note( wp_sprintf( __( 'Payment Intent Amount: %s', 'wpinv-stripe' ), wpinv_clean( $intent_amount ) ), false, false, true );
 			}
 
 			$invoice->mark_paid();

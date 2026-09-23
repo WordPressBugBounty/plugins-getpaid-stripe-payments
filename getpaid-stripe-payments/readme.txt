@@ -4,7 +4,7 @@ Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 2.3.27
+Stable tag: 2.3.28
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -70,6 +70,9 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.28 - 2026-09-23 =
+* Fixed minor rounding differences between Stripe charges and invoice amounts - FIXED
 
 = 2.3.27 - 2026-09-16 =
 * Enhance logging for Stripe failed payments and refund webhook events - CHANGED

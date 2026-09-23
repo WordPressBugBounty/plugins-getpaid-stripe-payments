@@ -14,28 +14,28 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function wpinv_stripe_is_zero_decimal_currency( $currency = '' ) {
-    $currency   = ! empty( $currency ) ? wpinv_get_currency() : strtoupper( $currency );
-    $currencies = array(
-        'BIF',
-        'CLP',
-        'DJF',
-        'GNF',
-        'JPY',
-        'KMF',
-        'KRW',
-        'MGA',
-        'PYG',
-        'RWF',
-        'UGX',
-        'VND',
-        'VUV',
-        'XAF',
-        'XOF',
-        'XPF',
-    );
+	$currency = empty( $currency ) ? wpinv_get_currency() : strtoupper( $currency );
 
-    return in_array( $currency, $currencies, true );
+	$currencies = array(
+		'BIF',
+		'CLP',
+		'DJF',
+		'GNF',
+		'JPY',
+		'KMF',
+		'KRW',
+		'MGA',
+		'PYG',
+		'RWF',
+		'UGX',
+		'VND',
+		'VUV',
+		'XAF',
+		'XOF',
+		'XPF'
+	);
 
+	return in_array( $currency, $currencies, true );
 }
 
 /**
@@ -164,15 +164,41 @@ function wpinv_stripe_get_minimum_amount( $currency = 'USD' ) {
  * @return float|int
  */
 function getpaid_stripe_get_amount( $amount, $currency = '' ) {
-	if ( ! $currency ) {
-		$currency = wpinv_get_currency();
+	$currency = empty( $currency ) ? wpinv_get_currency() : strtoupper( $currency );
+	$amount   = wpinv_sanitize_amount( $amount );
+
+	if ( ! wpinv_stripe_is_zero_decimal_currency( $currency ) ) {
+		$amount = $amount * 100; // In cents.
 	}
 
-	if ( wpinv_stripe_is_zero_decimal_currency( $currency ) ) {
-		return absint( $amount );
-	} else {
-		return absint( wpinv_format_amount( ( (float) $amount * 100 ), wpinv_decimals(), true ) ); // In cents.
+	// Float math can hold 0.6 as 0.5999999999999996 (and 1.15 * 100 as 114.99999999999999), so round off that to prevent 0.6 => 59 instead of 60.
+	$amount = round( $amount, 6 );
+
+	return absint( $amount );
+}
+
+/**
+ * Converts a Stripe amount (smallest currency unit) back to a regular amount.
+ *
+ * Reverse of getpaid_stripe_get_amount(): 60 => 0.6, 5999 => 59.99, 500 JPY => 500.
+ *
+ * @since 2.3.28
+ *
+ * @param int|float|string $amount   Stripe amount.
+ * @param string           $currency Currency code.
+ *
+ * @return float
+ */
+function getpaid_stripe_get_amount_from_stripe( $amount, $currency = '' ) {
+	$currency = empty( $currency ) ? wpinv_get_currency() : strtoupper( $currency );
+	$amount   = wpinv_sanitize_amount( $amount );
+
+	if ( ! wpinv_stripe_is_zero_decimal_currency( $currency ) ) {
+		$amount = $amount / 100; // From cents.
 	}
+
+	// Stripe amounts are whole minor units, so 2 decimals is exact and removes float noise from the division.
+	return round( $amount, 6 );
 }
 
 /**
