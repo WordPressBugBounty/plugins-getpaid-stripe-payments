@@ -87,11 +87,31 @@ class GetPaid_Stripe_Webhook extends GetPaid_Stripe_Resource {
 		$webhook = $this->call( 'create', array( $args ) );
 
 		if ( ! is_wp_error( $webhook ) ) {
+			$this->maybe_save_secret( $webhook );
 			return $webhook->id;
 		}
 
 		wpinv_error_log( $webhook->get_error_message(), false );
 		return $webhook;
+	}
+
+	/**
+	 * Stores the signing secret of a newly created endpoint if the current mode has none.
+	 *
+	 * @param \Stripe\WebhookEndpoint $webhook
+	 */
+	protected function maybe_save_secret( $webhook ) {
+
+		// Stripe only returns the secret when the endpoint is created.
+		if ( empty( $webhook->secret ) || ! is_string( $webhook->secret ) ) {
+			return;
+		}
+
+		$option = $this->gateway->is_sandbox() ? 'stripe_test_webhook_secret' : 'stripe_live_webhook_secret';
+
+		if ( '' === trim( (string) wpinv_get_option( $option, '' ) ) ) {
+			wpinv_update_option( $option, sanitize_text_field( $webhook->secret ) );
+		}
 	}
 
 }

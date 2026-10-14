@@ -255,22 +255,14 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 	/**
 	 * Verifies the Stripe-Signature header against the webhook signing secret.
 	 *
-	 * Returns false when no signing secret has been configured, in which case the
-	 * event is still re-fetched from the Stripe API before it is processed.
+	 * Only checked when a signing secret is set.
 	 *
 	 * @since 2.3.27
 	 *
 	 * @param string $payload Raw request body.
-	 * @return bool|WP_Error True when verified, false when not configured, WP_Error on failure.
+	 * @return bool|WP_Error True when accepted, WP_Error on failure.
 	 */
 	protected function verify_webhook_signature( $payload ) {
-		// @todo Add webhook secret setting.
-		//$secret = $this->get_webhook_secret();
-
-		//if ( empty( $secret ) ) {
-		//	return false;
-		//}
-
 		$header = isset( $_SERVER['HTTP_STRIPE_SIGNATURE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_STRIPE_SIGNATURE'] ) ) : '';
 
 		if ( empty( $header ) ) {
@@ -311,8 +303,12 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return new WP_Error( 'getpaid_stripe_expired_signature', 'The webhook timestamp is outside the allowed tolerance.' );
 		}
 
-		//@todo Remove after webhook secret setting added.
-		return true;
+		// No secret: rely on fetching the event from the API.
+		$secret = $this->get_webhook_secret();
+
+		if ( '' === $secret ) {
+			return true;
+		}
 
 		$expected = hash_hmac( 'sha256', $timestamp . '.' . $payload, $secret );
 
@@ -341,8 +337,9 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			$secret = GETPAID_STRIPE_WEBHOOK_SECRET;
 		}
 
+		// Use the current mode's secret.
 		if ( '' === $secret ) {
-			$secret = wpinv_get_option( 'stripe_webhook_secret' );
+			$secret = trim( (string) wpinv_get_option( wpinv_is_test_mode( 'stripe' ) ? 'stripe_test_webhook_secret' : 'stripe_live_webhook_secret', '' ) );
 		}
 
 		return (string) apply_filters( 'getpaid_stripe_webhook_secret', $secret );
@@ -877,12 +874,38 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			return;
 		}
 
+		// Stripe may deliver the same event more than once.
+		if ( $subscription->payment_exists( $transaction_id ) ) {
+			$this->log( 'The payment ' . $transaction_id . ' has already been recorded for the subscription #' . $subscription->get_id() . '.' );
+			return;
+		}
+
+		if ( isset( $invoice->amount_paid ) && isset( $invoice->currency ) && ! $this->renewal_amount_matches( $invoice, $subscription ) ) {
+			if ( $has_parent ) {
+				// translators: %s is the Stripe charge or invoice ID.
+				$_invoice->add_note( wp_sprintf( __( 'Stripe payment amount does not match the invoice. Check the payment in Stripe before marking it paid. Renewal payment ID: %s', 'wpinv-stripe' ), wpinv_clean( $transaction_id ) ), false, false, true );
+			}
+
+			$this->log( sprintf( 'Renewal payment %s amount %s %s does not match the subscription #%d recurring amount %s %s. Not recorded.', $transaction_id, (int) $invoice->amount_paid, strtoupper( wpinv_clean( $invoice->currency ) ), $subscription->get_id(), $subscription->get_recurring_amount(), $has_parent ? $_invoice->get_currency() : '' ) );
+			return;
+		}
+
 		if ( isset( $invoice->amount_paid ) && isset( $invoice->currency ) ) {
 			$invoice_currency = strtoupper( wpinv_clean( $invoice->currency ) );
 			$amount_formatted = getpaid_stripe_get_amount_from_stripe( $invoice->amount_paid, $invoice_currency );
 			$amount_paid      = wpinv_format_amount( $amount_formatted ) . ' ' . $invoice_currency;
 
-			$_invoice->add_note( wp_sprintf( __( 'Stripe Invoice Amount Paid: %s', 'wpinv-stripe' ), wpinv_clean( $amount_paid ) ), false, false, true );
+			$_invoice->add_note(
+				wp_sprintf( 
+					/* translators: 1: Formatted payment amount, 2: Stripe Transaction/Charge ID */
+					__( 'Stripe Subscription Payment: %1$s processed with transaction id %2$s.', 'wpinv-stripe' ), 
+					wpinv_clean( $amount_paid ),
+					wpinv_clean( $transaction_id )
+				), 
+				false,
+				false,
+				true 
+			);
 		}
 
 		// Period start date.
@@ -923,6 +946,73 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 		}
 
 		unset( $gp_stripe_renew_args );
+	}
+
+	/**
+	 * Checks that a paid Stripe invoice matches the amount and currency the plugin set for the subscription.
+	 *
+	 * @param Stripe\Invoice     $invoice      Stripe invoice.
+	 * @param WPInv_Subscription $subscription Subscription.
+	 * @return bool
+	 */
+	protected function renewal_amount_matches( $invoice, $subscription ) {
+		$parent = $subscription->get_parent_invoice();
+
+		if ( empty( $parent ) || ! $parent->exists() || strtoupper( (string) $invoice->currency ) !== strtoupper( $parent->get_currency() ) ) {
+			return false;
+		}
+
+		$currency = $parent->get_currency();
+		$expected = array( (int) getpaid_stripe_get_amount( $subscription->get_recurring_amount(), $currency ) );
+
+		// Grouped subscriptions send each item's price x quantity to Stripe.
+		$group = getpaid_get_invoice_subscription_group( $parent->get_id(), $subscription->get_id() );
+
+		if ( ! empty( $group['items'] ) ) {
+			$group_amount = 0;
+
+			foreach ( array_keys( $group['items'] ) as $item_id ) {
+				$item = $parent->get_item( $item_id );
+
+				if ( ! empty( $item ) ) {
+					$group_amount += (int) getpaid_stripe_get_amount( $item->get_recurring_sub_total(), $currency );
+				}
+			}
+
+			$expected[] = $group_amount;
+		}
+
+		$paid = array( (int) $invoice->amount_paid );
+
+		// Customer credit balance pays part of the total.
+		if ( isset( $invoice->total ) && isset( $invoice->starting_balance ) && (int) $invoice->starting_balance < 0 ) {
+			$paid[] = (int) $invoice->total;
+		}
+
+		// Tax added by Stripe on top of the price.
+		$tax = 0;
+
+		if ( isset( $invoice->total ) && isset( $invoice->total_excluding_tax ) && null !== $invoice->total_excluding_tax ) {
+			$tax = (int) $invoice->total - (int) $invoice->total_excluding_tax;
+		} elseif ( isset( $invoice->tax ) ) {
+			$tax = (int) $invoice->tax;
+		}
+
+		if ( $tax > 0 ) {
+			foreach ( $paid as $amount ) {
+				$paid[] = $amount - $tax;
+			}
+		}
+
+		foreach ( $paid as $amount ) {
+			foreach ( $expected as $expected_amount ) {
+				if ( abs( $amount - $expected_amount ) <= 1 ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public function filter_renewal_invoice_data( $args ) {

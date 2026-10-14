@@ -27,7 +27,6 @@ function wpinv_stripe_is_zero_decimal_currency( $currency = '' ) {
 		'MGA',
 		'PYG',
 		'RWF',
-		'UGX',
 		'VND',
 		'VUV',
 		'XAF',
@@ -166,6 +165,11 @@ function wpinv_stripe_get_minimum_amount( $currency = 'USD' ) {
 function getpaid_stripe_get_amount( $amount, $currency = '' ) {
 	$currency = empty( $currency ) ? wpinv_get_currency() : strtoupper( $currency );
 	$amount   = wpinv_sanitize_amount( $amount );
+
+	// Stripe takes UGX as two-decimal, but only whole shillings.
+	if ( 'UGX' === $currency ) {
+		$amount = round( (float) $amount );
+	}
 
 	if ( ! wpinv_stripe_is_zero_decimal_currency( $currency ) ) {
 		$amount = $amount * 100; // In cents.

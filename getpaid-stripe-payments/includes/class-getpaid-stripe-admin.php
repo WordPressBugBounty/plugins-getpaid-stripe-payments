@@ -70,18 +70,18 @@ class GetPaid_Stripe_Admin {
 
 		if ( empty( $live_account ) ) {
 			$desc  = __( 'Not connected to your live Stripe account.', 'wpinv-stripe' );
-			$live  = "<a href='$live_connect' class='wpinv-stripe-connect-btn'><span>$connect</span></a><p class='description not-connected'><strong>$desc</strong></p></div>";
+			$live  = "<a href='$live_connect' class='wpinv-stripe-connect-btn'><span>$connect</span></a><p class='description not-connected'><strong>$desc</strong></p>";
 		} else {
 			$desc  = __( 'Connected to your live Stripe account.', 'wpinv-stripe' );
-			$live  = "<a href='$live_disconnect' class='wpinv-stripe-connect-btn'><span>$disconnect</span></a><p class='description connected'><strong>$desc</strong></p></div>";
+			$live  = "<a href='$live_disconnect' class='wpinv-stripe-connect-btn'><span>$disconnect</span></a><p class='description connected'><strong>$desc</strong></p>";
 		}
 
 		if ( empty( $sandbox_account ) ) {
 			$desc    = __( 'Not connected to your sandbox Stripe account.', 'wpinv-stripe' );
-			$sandbox = "<a href='$sandbox_connect' class='wpinv-stripe-connect-btn'><span>$connect</span></a><p class='description not-connected'><strong>$desc</strong></p></div>";
+			$sandbox = "<a href='$sandbox_connect' class='wpinv-stripe-connect-btn'><span>$connect</span></a><p class='description not-connected'><strong>$desc</strong></p>";
 		} else {
 			$desc    = __( 'Connected to your sandbox Stripe account.', 'wpinv-stripe' );
-			$sandbox = "<a href='$sandbox_disconnect' class='wpinv-stripe-connect-btn'><span>$disconnect</span></a><p class='description connected'><strong>$desc</strong></p></div>";
+			$sandbox = "<a href='$sandbox_disconnect' class='wpinv-stripe-connect-btn'><span>$disconnect</span></a><p class='description connected'><strong>$desc</strong></p>";
 		}
 
 		?>
@@ -356,11 +356,25 @@ class GetPaid_Stripe_Admin {
 				'faux'   => true,
 			),
 
+			'stripe_test_webhook_secret'  => array(
+				'type' => 'password',
+				'id'   => 'stripe_test_webhook_secret',
+				'name' => __( 'Test Webhook Signing Secret', 'wpinv-stripe' ),
+				'desc' => __( 'Enter the signing secret (whsec_...) of your test mode webhook endpoint. Webhook signatures are checked when it is set.', 'wpinv-stripe' ),
+			),
+
+			'stripe_live_webhook_secret'  => array(
+				'type' => 'password',
+				'id'   => 'stripe_live_webhook_secret',
+				'name' => __( 'Live Webhook Signing Secret', 'wpinv-stripe' ),
+				'desc' => __( 'Enter the signing secret (whsec_...) of your live mode webhook endpoint. Webhook signatures are checked when it is set.', 'wpinv-stripe' ),
+			),
+
 			'stripe_disable_update_card' => array(
 				'type' => 'checkbox',
 				'id'   => 'stripe_disable_update_card',
 				'name' => __( 'Disable Update Card Details', 'wpinv-stripe' ),
-				'desc' => __( 'Tick to prevent customers from updating their payment card details on the frontend view subscription page for active subscriptions.', 'wpinv-stripe' ),
+				'desc' => __( 'Tick to prevent customers from updating their payment card details on the frontend view subscription page for active or failing subscriptions.', 'wpinv-stripe' ),
 				'std'  => true
 			)
 		);

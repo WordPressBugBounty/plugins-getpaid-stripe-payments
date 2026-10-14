@@ -329,6 +329,10 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		if ( isset( $_GET['payment_intent'] ) && isset( $_GET['invoice_key'] ) && wpinv_is_success_page() ) {
 			$invoice = wpinv_get_invoice( wpinv_get_invoice_id_by_key( $_GET['invoice_key'] ) );
 
+			if ( empty( $invoice ) ) {
+				return;
+			}
+
 			try {
 				update_post_meta( $invoice->get_id(), '_gp_stripe_process_intent', 1 );
 
@@ -442,6 +446,18 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 				$invoice->add_note( wp_sprintf( __( 'Payment Intent Amount: %s', 'wpinv-stripe' ), wpinv_clean( $intent_amount ) ), false, false, true );
 			}
 
+			$paid_amount = isset( $payment_intent->amount_received ) ? $payment_intent->amount_received : ( isset( $payment_intent->amount ) ? $payment_intent->amount : null );
+			$paid_currency = isset( $payment_intent->currency ) ? $payment_intent->currency : '';
+
+			// Checkout rounds each unit price, so allow up to half a minor unit per unit.
+			$tolerance = $is_checkout_session ? max( 1, (int) ceil( $this->get_invoice_quantity( $invoice ) / 2 ) ) : 1;
+
+			if ( null === $paid_amount || ! $this->stripe_amount_matches_invoice( $paid_amount, $paid_currency, $invoice, $tolerance ) ) {
+				$invoice->add_note( __( 'Stripe payment amount does not match the invoice. Check the payment in Stripe before marking it paid.', 'wpinv-stripe' ), false, false, true );
+				wpinv_error_log( sprintf( 'Stripe payment %s amount %s %s does not match invoice #%s total %s %s.', $payment_intent->id, $paid_amount, strtoupper( $paid_currency ), $invoice->get_number(), $invoice->get_total(), $invoice->get_currency() ), false );
+				return;
+			}
+
 			$invoice->mark_paid();
 
 			// Process subscriptions...
@@ -485,6 +501,41 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			}
 		}
 
+	}
+
+	/**
+	 * Checks that a Stripe amount (smallest currency unit) and currency match the invoice total.
+	 *
+	 * @param int|string    $amount    Stripe amount.
+	 * @param string        $currency  Stripe currency.
+	 * @param WPInv_Invoice $invoice   Invoice.
+	 * @param int           $tolerance Allowed difference in the smallest currency unit.
+	 * @return bool
+	 */
+	public function stripe_amount_matches_invoice( $amount, $currency, $invoice, $tolerance = 1 ) {
+		if ( ! is_numeric( $amount ) || strtoupper( (string) $currency ) !== strtoupper( $invoice->get_currency() ) ) {
+			return false;
+		}
+
+		$expected = (int) getpaid_stripe_get_amount( $invoice->get_total(), $invoice->get_currency() );
+
+		return abs( (int) $amount - $expected ) <= (int) $tolerance;
+	}
+
+	/**
+	 * Returns the total quantity of the invoice items.
+	 *
+	 * @param WPInv_Invoice $invoice Invoice.
+	 * @return int
+	 */
+	protected function get_invoice_quantity( $invoice ) {
+		$quantity = 0;
+
+		foreach ( $invoice->get_items() as $item ) {
+			$quantity += (int) $item->get_quantity();
+		}
+
+		return $quantity;
 	}
 
 	/**
@@ -1099,7 +1150,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 		$whitelist = array( '127.0.0.1', '::1' );
 
 		// check if the server is in the array
-		if ( in_array( $_SERVER['REMOTE_ADDR'], $whitelist ) ) {
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) && in_array( $_SERVER['REMOTE_ADDR'], $whitelist ) ) {
 
 			// this is a local environment
 			return true;
@@ -1404,6 +1455,7 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 											getpaid_hidden_field( 'getpaid-admin-action', 'stripe_manually_process_webhook_event' );
 
 											wp_nonce_field( 'getpaid-nonce', 'getpaid-nonce' );
+											wp_nonce_field( 'getpaid_stripe_process_event', '_wpnonce', false );
 
 											aui()->input(
 												array(

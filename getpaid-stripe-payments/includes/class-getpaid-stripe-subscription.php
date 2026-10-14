@@ -410,7 +410,8 @@ class GetPaid_Stripe_Subscription extends GetPaid_Stripe_Resource {
 			if ( $send_to_success ) {
 				$invoice->set_remote_subscription_id( $subscription->id );
 				$invoice->set_transaction_id( $result );
-				$invoice->add_note( sprintf( __( 'Stripe Charge ID: ', 'wpinv-stripe' ), $result ), false, false, true );
+				// translators: %s is the Stripe charge ID.
+				$invoice->add_note( sprintf( __( 'Stripe Charge ID: %s', 'wpinv-stripe' ), $result ), false, false, true );
 				$invoice->mark_paid();
 			}
 		}

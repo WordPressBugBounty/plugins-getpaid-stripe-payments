@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: GetPaid Stripe Payments 2.3.28\n"
+"Project-Id-Version: GetPaid Stripe Payments 2.3.29\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-23 20:30+0530\n"
-"PO-Revision-Date: 2026-09-23 20:30+0530\n"
+"POT-Creation-Date: 2026-10-14 20:20+0530\n"
+"PO-Revision-Date: 2026-10-14 20:20+0530\n"
 "Last-Translator: AyeCode Ltd <contact@ayecode.io>\n"
 "Language-Team: AyeCode Ltd <contact@ayecode.io>\n"
 "Language: en_US\n"
@@ -248,7 +248,7 @@ msgid ""
 "default. \"Site Language\": Display Checkout in site language."
 msgstr ""
 
-#: includes/class-getpaid-stripe-admin.php:338 includes/stripe-functions.php:50
+#: includes/class-getpaid-stripe-admin.php:338 includes/stripe-functions.php:49
 msgid "Auto"
 msgstr ""
 
@@ -283,13 +283,33 @@ msgid ""
 msgstr ""
 
 #: includes/class-getpaid-stripe-admin.php:362
-msgid "Disable Update Card Details"
+msgid "Test Webhook Signing Secret"
 msgstr ""
 
 #: includes/class-getpaid-stripe-admin.php:363
 msgid ""
+"Enter the signing secret (whsec_...) of your test mode webhook endpoint. "
+"Webhook signatures are checked when it is set."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:369
+msgid "Live Webhook Signing Secret"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:370
+msgid ""
+"Enter the signing secret (whsec_...) of your live mode webhook endpoint. "
+"Webhook signatures are checked when it is set."
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:376
+msgid "Disable Update Card Details"
+msgstr ""
+
+#: includes/class-getpaid-stripe-admin.php:377
+msgid ""
 "Tick to prevent customers from updating their payment card details on the "
-"frontend view subscription page for active subscriptions."
+"frontend view subscription page for active or failing subscriptions."
 msgstr ""
 
 #: includes/class-getpaid-stripe-customer.php:232
@@ -348,210 +368,217 @@ msgid ""
 msgstr ""
 
 #: includes/class-getpaid-stripe-gateway.php:283
-#: includes/class-getpaid-stripe-gateway.php:432
+#: includes/class-getpaid-stripe-gateway.php:436
 #, php-format
 msgid "Stripe Payment Intent ID: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:428
-#: includes/class-getpaid-stripe-ipn-handler.php:868
+#: includes/class-getpaid-stripe-gateway.php:432
+#: includes/class-getpaid-stripe-ipn-handler.php:865
 #: includes/class-getpaid-stripe-subscription.php:309
+#: includes/class-getpaid-stripe-subscription.php:414
 #, php-format
 msgid "Stripe Charge ID: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:442
+#: includes/class-getpaid-stripe-gateway.php:446
 #, php-format
 msgid "Payment Intent Amount: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:536
+#: includes/class-getpaid-stripe-gateway.php:456
+msgid ""
+"Stripe payment amount does not match the invoice. Check the payment in "
+"Stripe before marking it paid."
+msgstr ""
+
+#: includes/class-getpaid-stripe-gateway.php:587
 msgid "Invalid subscription."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:743
+#: includes/class-getpaid-stripe-gateway.php:794
 msgid "We are sorry. There was an error processing your payment."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:779
-#: includes/class-getpaid-stripe-gateway.php:780
+#: includes/class-getpaid-stripe-gateway.php:830
+#: includes/class-getpaid-stripe-gateway.php:831
 msgid "You have not set-up your stripe secret key."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:826
+#: includes/class-getpaid-stripe-gateway.php:877
 msgid ""
 "( See: <a href=\"https://stripe.com/docs/currencies\" "
 "target=\"_blank\">Supported Currencies</a> )"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:838
+#: includes/class-getpaid-stripe-gateway.php:889
 #, php-format
 msgid ""
 "SANDBOX ENABLED. You can use sandbox testing details only. See the "
 "%1$sStripe Sandbox Testing Guide%2$s for more details."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:883
+#: includes/class-getpaid-stripe-gateway.php:934
 msgid "Update Payment Card"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:966
+#: includes/class-getpaid-stripe-gateway.php:1017
 #, php-format
 msgid "An error occurred while trying to cancel subscription #%s in Stripe."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:983
+#: includes/class-getpaid-stripe-gateway.php:1034
 #, php-format
 msgid "Successfully cancelled subscription #%s in Stripe."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1011
+#: includes/class-getpaid-stripe-gateway.php:1062
 #, php-format
 msgid "An error occurred while trying to refund invoice #%1$s in Stripe: %2$s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1020
+#: includes/class-getpaid-stripe-gateway.php:1071
 #, php-format
 msgid "Successfully refunded invoice #%1$s in Stripe. Refund ID: %2$s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1049
+#: includes/class-getpaid-stripe-gateway.php:1100
 msgid "Stripe requires HTTPS connection for live transactions."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1149
+#: includes/class-getpaid-stripe-gateway.php:1200
 msgid "Successfully connected your test Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1155
+#: includes/class-getpaid-stripe-gateway.php:1206
 msgid "Successfully connected your live Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1181
+#: includes/class-getpaid-stripe-gateway.php:1232
 msgid "Successfully disconnected your live Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1189
+#: includes/class-getpaid-stripe-gateway.php:1240
 msgid "Successfully disconnected your test Stripe account"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1217
+#: includes/class-getpaid-stripe-gateway.php:1268
 msgid "Renewal Payment Failed (Stripe)"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1218
+#: includes/class-getpaid-stripe-gateway.php:1269
 msgid "These emails are sent to the customer when a renewal payment fails."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1224
+#: includes/class-getpaid-stripe-gateway.php:1275
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1225
+#: includes/class-getpaid-stripe-gateway.php:1276
 msgid "Enable this email notification"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1232
+#: includes/class-getpaid-stripe-gateway.php:1283
 msgid "Enable Admin BCC"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1233
+#: includes/class-getpaid-stripe-gateway.php:1284
 msgid ""
 "Check if you want to send a copy of this notification email to to the site "
 "admin."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1240
+#: includes/class-getpaid-stripe-gateway.php:1291
 msgid "Subject"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1241
+#: includes/class-getpaid-stripe-gateway.php:1292
 msgid "Enter the subject line for this email."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1244
+#: includes/class-getpaid-stripe-gateway.php:1295
 msgid "[{site_title}] Payment Failed"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1250
+#: includes/class-getpaid-stripe-gateway.php:1301
 msgid "Email Heading"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1251
+#: includes/class-getpaid-stripe-gateway.php:1302
 msgid "Enter the main heading contained within the email notification."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1254
+#: includes/class-getpaid-stripe-gateway.php:1305
 msgid "Payment Failed"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1260
+#: includes/class-getpaid-stripe-gateway.php:1311
 msgid "Email Content"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1263
+#: includes/class-getpaid-stripe-gateway.php:1314
 msgid ""
 "<p>Hi {name},</p><p>We are having trouble processing your payment. <a "
 "class=\"btn btn-success\" href=\"{subscription_url}\">Update your payment "
 "details</a></p>"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1347
+#: includes/class-getpaid-stripe-gateway.php:1398
 msgid "Check Expired Subscriptions (Stripe)"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1349
+#: includes/class-getpaid-stripe-gateway.php:1400
 msgid "Checks if expired subscriptions are actually expired in Stripe."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1362
-#: includes/class-getpaid-stripe-gateway.php:1373
+#: includes/class-getpaid-stripe-gateway.php:1413
+#: includes/class-getpaid-stripe-gateway.php:1424
 msgid "Run"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1367
-#: includes/class-getpaid-stripe-gateway.php:1395
+#: includes/class-getpaid-stripe-gateway.php:1418
+#: includes/class-getpaid-stripe-gateway.php:1446
 msgid "Process past event (Stripe)"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1369
+#: includes/class-getpaid-stripe-gateway.php:1420
 msgid "Manually process any Stripe event that occurred in the last 30 days."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1396
+#: includes/class-getpaid-stripe-gateway.php:1447
 #: includes/update-card-modal.php:18
 msgid "Close"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1413
+#: includes/class-getpaid-stripe-gateway.php:1465
 msgid "Event ID"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1414
+#: includes/class-getpaid-stripe-gateway.php:1466
 msgid "For example, evt_3OPLyuIbYxW2G9BD07LRNDds"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1416
+#: includes/class-getpaid-stripe-gateway.php:1468
 msgid ""
 "Open your Stripe dashboard and then click on Developers > Events. Click on "
 "the event you want to process and copy the ID from the URL. You can also "
 "press Control + i to copy the event id."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1418
+#: includes/class-getpaid-stripe-gateway.php:1470
 msgid "The event ID must start with evt_."
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1436
+#: includes/class-getpaid-stripe-gateway.php:1488
 #: includes/update-card-modal.php:49
 msgid "Cancel"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1437
+#: includes/class-getpaid-stripe-gateway.php:1489
 msgid "Process"
 msgstr ""
 
-#: includes/class-getpaid-stripe-gateway.php:1481
+#: includes/class-getpaid-stripe-gateway.php:1533
 msgid "Your subscriptions have been checked."
 msgstr ""
 
@@ -584,47 +611,54 @@ msgstr ""
 msgid "Processed %s event"
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:717
+#: includes/class-getpaid-stripe-ipn-handler.php:714
 #, php-format
 msgid "Stripe subscription payment failed for the Stripe invoice %s."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:720
+#: includes/class-getpaid-stripe-ipn-handler.php:717
 #, php-format
 msgid "Attempt: %d."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:724
+#: includes/class-getpaid-stripe-ipn-handler.php:721
 #, php-format
 msgid "Reason: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:728
+#: includes/class-getpaid-stripe-ipn-handler.php:725
 #, php-format
 msgid "Next attempt: %s."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:885
+#: includes/class-getpaid-stripe-ipn-handler.php:886
 #, php-format
-msgid "Stripe Invoice Amount Paid: %s"
+msgid ""
+"Stripe payment amount does not match the invoice. Check the payment in "
+"Stripe before marking it paid. Renewal payment ID: %s"
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:1081
+#: includes/class-getpaid-stripe-ipn-handler.php:901
+#, php-format
+msgid "Stripe Subscription Payment: %1$s processed with transaction id %2$s."
+msgstr ""
+
+#: includes/class-getpaid-stripe-ipn-handler.php:1171
 #, php-format
 msgid "Invoice fully refunded. Total refunded: %s."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:1086
+#: includes/class-getpaid-stripe-ipn-handler.php:1176
 #, php-format
 msgid "Invoice partially refunded. Total refunded: %1$s of %2$s."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:1092
+#: includes/class-getpaid-stripe-ipn-handler.php:1182
 #, php-format
 msgid "Invoice partially refunded %1$s. Total refunded: %2$s of %3$s."
 msgstr ""
 
-#: includes/class-getpaid-stripe-ipn-handler.php:1388
+#: includes/class-getpaid-stripe-ipn-handler.php:1478
 #, php-format
 msgid "Stripe Invoice ID: %s"
 msgstr ""
@@ -688,155 +722,151 @@ msgstr ""
 msgid "This invoice will be marked as paid as soon as we confirm your payment."
 msgstr ""
 
-#: includes/class-getpaid-stripe-subscription.php:413
-msgid "Stripe Charge ID: "
-msgstr ""
-
-#: includes/stripe-functions.php:51
+#: includes/stripe-functions.php:50
 msgid "Arabic"
 msgstr ""
 
-#: includes/stripe-functions.php:52
+#: includes/stripe-functions.php:51
 msgid "Bulgarian (Bulgaria)"
 msgstr ""
 
-#: includes/stripe-functions.php:53
+#: includes/stripe-functions.php:52
 msgid "Czech (Czech Republic)"
 msgstr ""
 
-#: includes/stripe-functions.php:54
+#: includes/stripe-functions.php:53
 msgid "Danish"
 msgstr ""
 
-#: includes/stripe-functions.php:55
+#: includes/stripe-functions.php:54
 msgid "German (Germany)"
 msgstr ""
 
-#: includes/stripe-functions.php:56
+#: includes/stripe-functions.php:55
 msgid "Greek (Greece)"
 msgstr ""
 
-#: includes/stripe-functions.php:57
+#: includes/stripe-functions.php:56
 msgid "English"
 msgstr ""
 
-#: includes/stripe-functions.php:58
+#: includes/stripe-functions.php:57
 msgid "English (United Kingdom)"
 msgstr ""
 
-#: includes/stripe-functions.php:59
+#: includes/stripe-functions.php:58
 msgid "Spanish (Spain)"
 msgstr ""
 
-#: includes/stripe-functions.php:60
+#: includes/stripe-functions.php:59
 msgid "Spanish (Latin America)"
 msgstr ""
 
-#: includes/stripe-functions.php:61
+#: includes/stripe-functions.php:60
 msgid "Estonian (Estonia)"
 msgstr ""
 
-#: includes/stripe-functions.php:62
+#: includes/stripe-functions.php:61
 msgid "Finnish (Finland)"
 msgstr ""
 
-#: includes/stripe-functions.php:63
+#: includes/stripe-functions.php:62
 msgid "French (France)"
 msgstr ""
 
-#: includes/stripe-functions.php:64
+#: includes/stripe-functions.php:63
 msgid "French (Canada)"
 msgstr ""
 
-#: includes/stripe-functions.php:65
+#: includes/stripe-functions.php:64
 msgid "Hebrew (Israel)"
 msgstr ""
 
-#: includes/stripe-functions.php:66
+#: includes/stripe-functions.php:65
 msgid "Hungarian (Hungary)"
 msgstr ""
 
-#: includes/stripe-functions.php:67
+#: includes/stripe-functions.php:66
 msgid "Indonesian (Indonesia)"
 msgstr ""
 
-#: includes/stripe-functions.php:68
+#: includes/stripe-functions.php:67
 msgid "Italian (Italy)"
 msgstr ""
 
-#: includes/stripe-functions.php:69
+#: includes/stripe-functions.php:68
 msgid "Japanese"
 msgstr ""
 
-#: includes/stripe-functions.php:70
+#: includes/stripe-functions.php:69
 msgid "Lithuanian (Lithuania)"
 msgstr ""
 
-#: includes/stripe-functions.php:71
+#: includes/stripe-functions.php:70
 msgid "Latvian (Latvia)"
 msgstr ""
 
-#: includes/stripe-functions.php:72
+#: includes/stripe-functions.php:71
 msgid "Malay (Malaysia)"
 msgstr ""
 
-#: includes/stripe-functions.php:73
+#: includes/stripe-functions.php:72
 msgid "Maltese (Malta)"
 msgstr ""
 
-#: includes/stripe-functions.php:74
+#: includes/stripe-functions.php:73
 msgid "Norwegian Bokmål"
 msgstr ""
 
-#: includes/stripe-functions.php:75
+#: includes/stripe-functions.php:74
 msgid "Dutch (Netherlands)"
 msgstr ""
 
-#: includes/stripe-functions.php:76
+#: includes/stripe-functions.php:75
 msgid "Polish (Poland)"
 msgstr ""
 
-#: includes/stripe-functions.php:77
+#: includes/stripe-functions.php:76
 msgid "Portuguese (Brazil)"
 msgstr ""
 
-#: includes/stripe-functions.php:78
+#: includes/stripe-functions.php:77
 msgid "Portuguese"
 msgstr ""
 
-#: includes/stripe-functions.php:79
+#: includes/stripe-functions.php:78
 msgid "Romanian (Romania)"
 msgstr ""
 
-#: includes/stripe-functions.php:80
+#: includes/stripe-functions.php:79
 msgid "Russian (Russia)"
 msgstr ""
 
-#: includes/stripe-functions.php:81
+#: includes/stripe-functions.php:80
 msgid "Slovak (Slovakia)"
 msgstr ""
 
-#: includes/stripe-functions.php:82
+#: includes/stripe-functions.php:81
 msgid "Slovenian (Slovenia)"
 msgstr ""
 
-#: includes/stripe-functions.php:83
+#: includes/stripe-functions.php:82
 msgid "Swedish (Sweden)"
 msgstr ""
 
-#: includes/stripe-functions.php:84
+#: includes/stripe-functions.php:83
 msgid "Turkish (Turkey)"
 msgstr ""
 
-#: includes/stripe-functions.php:85
+#: includes/stripe-functions.php:84
 msgid "Chinese Simplified (China)"
 msgstr ""
 
-#: includes/stripe-functions.php:86
+#: includes/stripe-functions.php:85
 msgid "Chinese Traditional (Hong Kong)"
 msgstr ""
 
-#: includes/stripe-functions.php:87
+#: includes/stripe-functions.php:86
 msgid "Chinese Simplified (Taiwan)"
 msgstr ""
 
