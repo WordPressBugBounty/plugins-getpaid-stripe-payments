@@ -4,7 +4,7 @@ Donate link: https://wpgetpaid.com/
 Tags: stripe, stripe payments, stripe gateway, payment, payments, button, shortcode, digital goods, payment gateway, instant payment, commerce, digital downloads, downloads, e-commerce, e-store, ecommerce, stripe checkout, credit card payments
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 2.3.29
+Stable tag: 2.3.30
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -70,6 +70,11 @@ and you shall get an answer...
 2. Sample settings page.
 
 == Changelog ==
+
+= 2.3.30 - 2026-10-28 =
+* A customer's new card (setup intent) never reached their Stripe subscription: the setup_intent.succeeded webhook failed with a fatal error, so renewals kept charging the old card - FIXED
+* Cancelling or deleting a subscription that Stripe had already ended (a missed webhook, or cancelled in the Stripe dashboard) no longer shows "No such subscription"; it is treated as already cancelled - FIXED
+* Incomplete card no longer creates a pending invoice on each submit - FIXED
 
 = 2.3.29 - 2026-10-14 =
 * Webhook signatures are now checked when a signing secret is set - FIXED/SECURITY

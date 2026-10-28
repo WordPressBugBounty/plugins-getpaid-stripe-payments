@@ -1291,6 +1291,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 
 		$this->log( 'Processing subscription cancellation for #' . $profile_id );
 
+		// Stripe has already ended it, so the gateway must not try to cancel it in Stripe again.
+		GetPaid_Stripe_Gateway::mark_cancelled_in_stripe( $profile_id );
 		$subscription->cancel();
 
 		$this->log( 'Subscription #' . $profile_id . ' has been cancelled.' );
@@ -1347,7 +1349,8 @@ class GetPaid_Stripe_IPN_Handler extends GetPaid_Stripe_Resource {
 			}
 
 			// Process the payment method.
-			$_setup_intent = new GetPaid_Stripe_Setup_Intent( $this, $subscription );
+			// The setup intent needs the gateway (for get_stripe()), not this webhook handler.
+			$_setup_intent = new GetPaid_Stripe_Setup_Intent( $this->gateway, $subscription );
 
 			return $_setup_intent->process_payment_method( $setup_intent );
 		}

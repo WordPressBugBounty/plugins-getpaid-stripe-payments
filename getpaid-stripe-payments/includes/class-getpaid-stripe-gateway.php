@@ -41,6 +41,38 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 	public $order = 5;
 
 	/**
+	 * Stripe subscription ids that Stripe itself ended (customer.subscription.deleted) in this request, so cancelling
+	 * the local subscription does not call Stripe to cancel them again. See mark_cancelled_in_stripe().
+	 *
+	 * @since 2.3.30
+	 * @var string[]
+	 */
+	private static $cancelled_in_stripe = array();
+
+	/**
+	 * Records that Stripe itself ended a subscription, so cancelling it locally skips the call to Stripe.
+	 *
+	 * @since 2.3.30
+	 * @param string $profile_id Stripe subscription id.
+	 */
+	public static function mark_cancelled_in_stripe( $profile_id ) {
+		if ( ! empty( $profile_id ) && ! in_array( $profile_id, self::$cancelled_in_stripe, true ) ) {
+			self::$cancelled_in_stripe[] = $profile_id;
+		}
+	}
+
+	/**
+	 * Whether Stripe itself ended this subscription during this request.
+	 *
+	 * @since 2.3.30
+	 * @param string $profile_id Stripe subscription id.
+	 * @return bool
+	 */
+	public static function was_cancelled_in_stripe( $profile_id ) {
+		return ! empty( $profile_id ) && in_array( $profile_id, self::$cancelled_in_stripe, true );
+	}
+
+	/**
 	 * Class constructor.
 	 */
 	public function __construct() {
@@ -1007,8 +1039,28 @@ class GetPaid_Stripe_Gateway extends GetPaid_Payment_Gateway {
 			return;
 		}
 
+		// Never started in Stripe, or already ended there by Stripe in this request: nothing to cancel remotely.
+		if ( ! $subscription->get_profile_id() || self::was_cancelled_in_stripe( $subscription->get_profile_id() ) ) {
+			return;
+		}
+
 		$stripe_subscription = new GetPaid_Stripe_Subscription( $this, $subscription );
 		$result              = $stripe_subscription->cancel();
+
+		// "No such subscription": Stripe has already ended or deleted it (a missed webhook, cancelled in the Stripe
+		// dashboard, or deleted locally afterwards). The end state is what was asked for, so it is not an error.
+		if ( is_wp_error( $result ) && 'resource_missing' === $result->get_error_code() ) {
+			if ( is_admin() ) {
+				getpaid_admin()->show_success(
+					sprintf(
+						// translators: %s is the subscription ID.
+						__( 'Subscription #%s had already ended in Stripe.', 'wpinv-stripe' ),
+						$subscription->get_id()
+					)
+				);
+			}
+			return;
+		}
 
 		if ( is_wp_error( $result ) ) {
 

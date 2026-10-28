@@ -94,7 +94,8 @@ jQuery( function($) {
 		})
 	})
 
-	// Collect wallet details while the user activation is still valid.
+	// Validate the payment element before the form is sent to the server.
+	// elements.submit() is called here so wallets still have the user activation.
 	$( 'body' ).on( 'getpaid_payment_form_before_submit', function( e, data ) {
 
 		var form     = data.form;
@@ -105,7 +106,33 @@ jQuery( function($) {
 			return;
 		}
 
-		form.data( 'getpaid_stripe_submit', elements.submit() );
+		var displayError = form.find( '.getpaid-stripe-card-errors' );
+		var submitted    = elements.submit();
+
+		form.data( 'getpaid_stripe_submit', submitted );
+
+		// Hold the checkout request until Stripe has validated the details,
+		// so an incomplete card does not create a pending invoice.
+		data.delay = true;
+
+		var proceed = function( error ) {
+			if ( error ) {
+				data.submit = false;
+				form.removeData( 'getpaid_stripe_submit' );
+				displayError.addClass( 'alert alert-danger mt-2' ).text( error.message || GetPaid_Stripe.unknownError );
+			}
+
+			$( 'body' ).trigger( 'getpaid_payment_form_delayed_submit' + data.key );
+		};
+
+		submitted.then(
+			function( result ) {
+				proceed( result && result.error ? result.error : null );
+			},
+			function( error ) {
+				proceed( error || {} );
+			}
+		);
 	});
 
 	// Handle form submission.
